@@ -16,10 +16,11 @@ public class ArrayListProductDaoTest {
     private List<Product> createValidProducts(int count) {
         List<Product> productList = new ArrayList<>();
         BigDecimal price = new BigDecimal(1);
+        int stock = 1;
         for (int i = 0; i < count; i++) {
             Product product = new Product();
             product.setPrice(price);
-            product.setStock(1);
+            product.setStock(stock);
             productList.add(product);
         }
         return productList;
@@ -94,12 +95,13 @@ public class ArrayListProductDaoTest {
     @Test
     public void saveWhenProductWithSameIdExistsDeletesOldProduct() {
         long id = 1;
-        List<Product> products = createValidProducts(2);
+        int count = 2;
+        List<Product> products = createValidProducts(count);
         products.forEach(product -> {
             product.setId(id);
             productDao.save(product);
         });
-        Product expectedProduct = products.get(1);
+        Product expectedProduct = products.get(count - 1);
 
         List<Product> actualProductList = productDao.findProducts();
 
