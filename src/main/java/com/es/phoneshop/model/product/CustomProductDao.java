@@ -13,11 +13,19 @@ public class CustomProductDao implements ProductDao {
     private final Lock writeLock;
     private long currentId = 1L;
 
-    public CustomProductDao() {
+    private CustomProductDao() {
         productList = createSampleProducts();
         ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
         readLock = readWriteLock.readLock();
         writeLock = readWriteLock.writeLock();
+    }
+
+    private static final class InstanceHolder {
+        private static final CustomProductDao instance = new CustomProductDao();
+    }
+
+    public static CustomProductDao getInstance() {
+        return InstanceHolder.instance;
     }
 
     private List<Product> createSampleProducts() {

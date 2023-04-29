@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.*;
 
 public class CustomProductDaoTest {
-    private CustomProductDao productDao;
+    private final CustomProductDao productDao = CustomProductDao.getInstance();
 
     private List<Product> createValidProducts(int count) {
         List<Product> productList = new ArrayList<>();
@@ -34,7 +34,6 @@ public class CustomProductDaoTest {
 
     @Before
     public void setup() {
-        productDao = new CustomProductDao();
         productDao.clear();
     }
 
