@@ -47,13 +47,17 @@ public class CustomProductDao implements ProductDao {
     @Override
     public Optional<Product> getProduct(Long id) {
         Optional<Product> result;
-        readLock.lock();
-        try {
-            result = productList.stream()
-                    .filter(product -> product.getId().equals(id))
-                    .findAny();
-        } finally {
-            readLock.unlock();
+        if (id != null) {
+            readLock.lock();
+            try {
+                result = productList.stream()
+                        .filter(product -> id.equals(product.getId()))
+                        .findAny();
+            } finally {
+                readLock.unlock();
+            }
+        } else {
+            result = Optional.empty();
         }
         return result;
     }
