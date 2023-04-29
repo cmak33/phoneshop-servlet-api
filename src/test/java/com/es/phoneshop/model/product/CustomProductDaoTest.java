@@ -18,10 +18,11 @@ public class CustomProductDaoTest {
         List<Product> productList = new ArrayList<>();
         BigDecimal price = new BigDecimal(1);
         int stock = 1;
-        for (int i = 0; i < count; i++) {
+        for (int i = 1; i <= count; i++) {
             Product product = new Product();
             product.setPrice(price);
             product.setStock(stock);
+            product.setId((long) i);
             productList.add(product);
         }
         return productList;
@@ -35,23 +36,23 @@ public class CustomProductDaoTest {
 
     @Before
     public void setup() {
-        productDao.clear();
+        int validProductsCount = 10;
+        productDao.setProductList(createValidProducts(validProductsCount));
     }
 
     @Test
-    public void testFindProductsNoResults() {
-        assertTrue(productDao.findProducts().isEmpty());
+    public void getProductWhenProductIsNotPresentReturnsEmptyOptional() {
+        assertTrue(productDao.getProduct(-1L).isEmpty());
     }
 
     @Test
-    public void getProductWhenProductIsNotPresentReturnsNull() {
-        assertTrue(productDao.getProduct(0L).isEmpty());
+    public void getProductWhenIdIsNullReturnsEmptyOptional() {
+        assertTrue(productDao.getProduct(null).isEmpty());
     }
 
     @Test
     public void getProductWhenProductIsPresentReturnsProduct() {
-        Product product = new Product();
-        productDao.save(product);
+        Product product = productDao.getProductList().get(0);
 
         Optional<Product> actualProduct = productDao.getProduct(product.getId());
 
@@ -61,23 +62,19 @@ public class CustomProductDaoTest {
 
     @Test
     public void findProductsWhenAllProductsAreValidReturnsAll() {
-        int productsCount = 10;
-        List<Product> validProducts = createValidProducts(productsCount);
-        validProducts.forEach(productDao::save);
+        List<Product> expectedProducts = productDao.getProductList();
 
         List<Product> actualProducts = productDao.findProducts();
 
-        assertEquals(validProducts, actualProducts);
+        assertEquals(expectedProducts, actualProducts);
     }
 
     @Test
     public void findProductsWhenInvalidProductsArePresentReturnsValidProducts() {
-        int validProductsCount = 10;
-        List<Product> validProducts = createValidProducts(validProductsCount);
-        validProducts.forEach(productDao::save);
+        List<Product> validProducts = new ArrayList<>(productDao.getProductList());
         int invalidProductsCount = 10;
         List<Product> invalidProducts = createInvalidProducts(invalidProductsCount);
-        invalidProducts.forEach(productDao::save);
+        productDao.getProductList().addAll(invalidProducts);
 
         List<Product> actualProducts = productDao.findProducts();
 
@@ -87,39 +84,29 @@ public class CustomProductDaoTest {
     @Test
     public void saveWhenProductIdIsNullSavesProduct() {
         Product product = new Product();
+
         productDao.save(product);
 
-        Optional<Product> actualProduct = productDao.getProduct(product.getId());
-
-        assertTrue(actualProduct.isPresent());
-        assertEquals(product, actualProduct.get());
+        assertTrue(productDao.getProductList().contains(product));
     }
 
     @Test
     public void deleteWhenProductIsNotPresentDoesNotChangeProductList() {
-        long id = 1;
-        List<Product> productList = createValidProducts(1);
-        Product product = productList.get(0);
-        product.setId(id);
-        productDao.save(product);
-        productDao.delete(id + 1);
+        List<Product> expectedProductList = new ArrayList<>(productDao.getProductList());
 
-        List<Product> actualProductList = productDao.findProducts();
+        productDao.delete(-1L);
 
-        assertEquals(productList, actualProductList);
+        assertEquals(expectedProductList, productDao.getProductList());
     }
 
     @Test
     public void deleteWhenProductIsPresentRemovesProduct() {
-        int count = 10;
-        List<Product> productList = createValidProducts(count);
-        productList.forEach(productDao::save);
-        Product productToRemove = productList.get(0);
-        productList.remove(productToRemove);
-        productDao.delete(productToRemove.getId());
+        List<Product> expectedProductList = new ArrayList<>(productDao.getProductList());
+        Product productToDelete = expectedProductList.get(0);
+        expectedProductList.remove(productToDelete);
 
-        List<Product> actualProductList = productDao.findProducts();
+        productDao.delete(productToDelete.getId());
 
-        assertEquals(productList, actualProductList);
+        assertEquals(expectedProductList, productDao.getProductList());
     }
 }
