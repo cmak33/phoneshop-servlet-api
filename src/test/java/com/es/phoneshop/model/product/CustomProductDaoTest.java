@@ -41,17 +41,17 @@ public class CustomProductDaoTest {
     }
 
     @Test
-    public void getProductWhenProductIsNotPresentReturnsEmptyOptional() {
+    public void givenIdOfNotExistingProduct_whenGetProduct_thenReturnEmptyOptional() {
         assertTrue(productDao.getProduct(-1L).isEmpty());
     }
 
     @Test
-    public void getProductWhenIdIsNullReturnsEmptyOptional() {
+    public void givenNullId_whenGetProduct_thenReturnEmptyOptional() {
         assertTrue(productDao.getProduct(null).isEmpty());
     }
 
     @Test
-    public void getProductWhenProductIsPresentReturnsProduct() {
+    public void givenExistingProduct_whenGetProduct_thenReturnProduct() {
         Product product = productDao.getProductList().get(0);
 
         Optional<Product> actualProduct = productDao.getProduct(product.getId());
@@ -61,7 +61,7 @@ public class CustomProductDaoTest {
     }
 
     @Test
-    public void findProductsWhenAllProductsAreValidReturnsAll() {
+    public void givenValidProducts_whenFindProducts_thenReturnAllProducts() {
         List<Product> expectedProducts = productDao.getProductList();
 
         List<Product> actualProducts = productDao.findProducts();
@@ -70,7 +70,7 @@ public class CustomProductDaoTest {
     }
 
     @Test
-    public void findProductsWhenInvalidProductsArePresentReturnsValidProducts() {
+    public void givenValidAndInvalidProducts_whenFindProducts_thenReturnValidProducts() {
         List<Product> validProducts = new ArrayList<>(productDao.getProductList());
         int invalidProductsCount = 10;
         List<Product> invalidProducts = createInvalidProducts(invalidProductsCount);
@@ -82,7 +82,7 @@ public class CustomProductDaoTest {
     }
 
     @Test
-    public void saveWhenProductIdIsNullSavesProduct() {
+    public void givenProductWithNullId_whenSave_thenSaveProduct() {
         Product product = new Product();
 
         productDao.save(product);
@@ -91,7 +91,7 @@ public class CustomProductDaoTest {
     }
 
     @Test
-    public void deleteWhenProductIsNotPresentDoesNotChangeProductList() {
+    public void givenIdOfNotExistingProduct_whenDelete_thenDontChangeProductList() {
         List<Product> expectedProductList = new ArrayList<>(productDao.getProductList());
 
         productDao.delete(-1L);
@@ -100,7 +100,7 @@ public class CustomProductDaoTest {
     }
 
     @Test
-    public void deleteWhenProductIsPresentRemovesProduct() {
+    public void givenIdOfExistingProduct_whenDelete_thenRemoveProduct() {
         List<Product> expectedProductList = new ArrayList<>(productDao.getProductList());
         Product productToDelete = expectedProductList.get(0);
         expectedProductList.remove(productToDelete);
