@@ -1,6 +1,6 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.configuration.ProductDaoConfiguration;
+import com.es.phoneshop.model.product.CustomProductDao;
 import com.es.phoneshop.model.product.ProductDao;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -16,8 +16,7 @@ public class ProductListPageServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        ProductDaoConfiguration configuration = new ProductDaoConfiguration();
-        productDao = configuration.createProductDaoWithSampleProducts();
+        productDao = new CustomProductDao();
     }
 
     @Override

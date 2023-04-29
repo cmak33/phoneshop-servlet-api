@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.*;
 
 public class CustomProductDaoTest {
-    private ProductDao productDao;
+    private CustomProductDao productDao;
 
     private List<Product> createValidProducts(int count) {
         List<Product> productList = new ArrayList<>();
@@ -35,6 +35,7 @@ public class CustomProductDaoTest {
     @Before
     public void setup() {
         productDao = new CustomProductDao();
+        productDao.clear();
     }
 
     @Test
@@ -133,17 +134,6 @@ public class CustomProductDaoTest {
         productDao.delete(productToRemove.getId());
 
         List<Product> actualProductList = productDao.findProducts();
-
-        assertEquals(productList, actualProductList);
-    }
-
-    @Test
-    public void constructorWhenListIsPassedSavesAllProducts() {
-        int count = 10;
-        List<Product> productList = createValidProducts(count);
-        CustomProductDao arrayListProductDao = new CustomProductDao(productList);
-
-        List<Product> actualProductList = arrayListProductDao.findProducts();
 
         assertEquals(productList, actualProductList);
     }
