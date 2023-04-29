@@ -76,12 +76,10 @@ public class CustomProductDao implements ProductDao {
     public void save(Product product) {
         writeLock.lock();
         try {
-            if (product.getId() != null) {
-                delete(product.getId());
-            } else {
+            if (!productList.contains(product)) {
                 product.setId(generateId());
+                productList.add(product);
             }
-            productList.add(product);
         } finally {
             writeLock.unlock();
         }

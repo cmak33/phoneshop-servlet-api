@@ -96,23 +96,6 @@ public class CustomProductDaoTest {
     }
 
     @Test
-    public void saveWhenProductWithSameIdExistsDeletesOldProduct() {
-        long id = 1;
-        int count = 2;
-        List<Product> products = createValidProducts(count);
-        products.forEach(product -> {
-            product.setId(id);
-            productDao.save(product);
-        });
-        Product expectedProduct = products.get(count - 1);
-
-        List<Product> actualProductList = productDao.findProducts();
-
-        assertEquals(1, actualProductList.size());
-        assertTrue(actualProductList.contains(expectedProduct));
-    }
-
-    @Test
     public void deleteWhenProductIsNotPresentDoesNotChangeProductList() {
         long id = 1;
         List<Product> productList = createValidProducts(1);
