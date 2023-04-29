@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -48,14 +49,13 @@ public class CustomProductDao implements ProductDao {
     }
 
     @Override
-    public Product getProduct(Long id) {
-        Product result;
+    public Optional<Product> getProduct(Long id) {
+        Optional<Product> result;
         readLock.lock();
         try {
             result = productList.stream()
                     .filter(product -> product.getId().equals(id))
-                    .findAny()
-                    .orElse(null);
+                    .findAny();
         } finally {
             readLock.unlock();
         }
@@ -94,13 +94,15 @@ public class CustomProductDao implements ProductDao {
 
     @Override
     public void delete(Long id) {
-        Product productToDelete = getProduct(id);
-        writeLock.lock();
-        try {
-            productList.remove(productToDelete);
-        } finally {
-            writeLock.unlock();
-        }
+        Optional<Product> productToDelete = getProduct(id);
+        productToDelete.ifPresent(product -> {
+            writeLock.lock();
+            try {
+                productList.remove(product);
+            } finally {
+                writeLock.unlock();
+            }
+        });
     }
 
     public void clear() {

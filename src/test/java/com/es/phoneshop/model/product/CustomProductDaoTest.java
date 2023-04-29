@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
@@ -44,7 +45,7 @@ public class CustomProductDaoTest {
 
     @Test
     public void getProductWhenProductIsNotPresentReturnsNull() {
-        assertNull(productDao.getProduct(0L));
+        assertTrue(productDao.getProduct(0L).isEmpty());
     }
 
     @Test
@@ -52,9 +53,10 @@ public class CustomProductDaoTest {
         Product product = new Product();
         productDao.save(product);
 
-        Product actualProduct = productDao.getProduct(product.getId());
+        Optional<Product> actualProduct = productDao.getProduct(product.getId());
 
-        assertEquals(product, actualProduct);
+        assertTrue(actualProduct.isPresent());
+        assertEquals(product, actualProduct.get());
     }
 
     @Test
@@ -87,9 +89,10 @@ public class CustomProductDaoTest {
         Product product = new Product();
         productDao.save(product);
 
-        Product actualProduct = productDao.getProduct(product.getId());
+        Optional<Product> actualProduct = productDao.getProduct(product.getId());
 
-        assertEquals(product, actualProduct);
+        assertTrue(actualProduct.isPresent());
+        assertEquals(product, actualProduct.get());
     }
 
     @Test
