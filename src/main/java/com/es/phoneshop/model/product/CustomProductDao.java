@@ -106,15 +106,6 @@ public class CustomProductDao implements ProductDao {
         });
     }
 
-    public void clear() {
-        writeLock.lock();
-        try {
-            productList.clear();
-        } finally {
-            writeLock.unlock();
-        }
-    }
-
     public List<Product> getProductList() {
         return productList;
     }
