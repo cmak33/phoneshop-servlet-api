@@ -1,10 +1,7 @@
 package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -12,7 +9,6 @@ public class CustomProductDao implements ProductDao {
     private final List<Product> productList;
     private final Lock readLock;
     private final Lock writeLock;
-    private long currentId = 1L;
 
     private CustomProductDao() {
         productList = createSampleProducts();
@@ -83,13 +79,16 @@ public class CustomProductDao implements ProductDao {
             if (product.getId() != null) {
                 delete(product.getId());
             } else {
-                product.setId(currentId);
-                currentId++;
+                product.setId(generateId());
             }
             productList.add(product);
         } finally {
             writeLock.unlock();
         }
+    }
+
+    private Long generateId() {
+        return UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
     }
 
     @Override
