@@ -1,7 +1,7 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.CustomProductDao;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.service.ProductService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,13 +29,13 @@ public class ProductListPageServletTest {
     @Mock
     private RequestDispatcher requestDispatcher;
     @Mock
-    private CustomProductDao customProductDao;
+    private ProductService productService;
 
     private final ProductListPageServlet servlet = new ProductListPageServlet();
 
     @Before
     public void setup() {
-        servlet.setProductDao(customProductDao);
+        servlet.setProductService(productService);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
@@ -44,7 +44,7 @@ public class ProductListPageServletTest {
         List<Product> productList = new ArrayList<>() {{
             add(new Product());
         }};
-        when(customProductDao.findProducts()).thenReturn(productList);
+        when(productService.findProducts()).thenReturn(productList);
 
         servlet.doGet(request, response);
 
