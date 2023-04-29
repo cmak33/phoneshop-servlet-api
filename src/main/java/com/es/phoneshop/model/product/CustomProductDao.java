@@ -6,9 +6,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class CustomProductDao implements ProductDao {
-    private final List<Product> productList;
     private final Lock readLock;
     private final Lock writeLock;
+    private List<Product> productList;
 
     private CustomProductDao() {
         productList = createSampleProducts();
@@ -113,5 +113,13 @@ public class CustomProductDao implements ProductDao {
         } finally {
             writeLock.unlock();
         }
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 }
