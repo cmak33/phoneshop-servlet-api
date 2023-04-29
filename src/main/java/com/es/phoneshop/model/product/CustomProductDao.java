@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ArrayListProductDao implements ProductDao {
+public class CustomProductDao implements ProductDao {
     private final List<Product> productList;
     private long currentId = 1L;
 
-    public ArrayListProductDao() {
+    public CustomProductDao() {
         productList = Collections.synchronizedList(new ArrayList<>());
     }
 
-    public ArrayListProductDao(List<Product> products) {
+    public CustomProductDao(List<Product> products) {
         this();
         products.forEach(this::save);
     }

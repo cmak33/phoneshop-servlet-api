@@ -1,6 +1,6 @@
 package com.es.phoneshop.configuration;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.CustomProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class ProductDaoConfiguration {
     public ProductDao createProductDaoWithSampleProducts() {
         List<Product> productList = createSampleProducts();
-        return new ArrayListProductDao(productList);
+        return new CustomProductDao(productList);
     }
 
     private List<Product> createSampleProducts() {

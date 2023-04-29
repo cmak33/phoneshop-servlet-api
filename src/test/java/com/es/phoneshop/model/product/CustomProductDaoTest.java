@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 
-public class ArrayListProductDaoTest {
+public class CustomProductDaoTest {
     private ProductDao productDao;
 
     private List<Product> createValidProducts(int count) {
@@ -34,7 +34,7 @@ public class ArrayListProductDaoTest {
 
     @Before
     public void setup() {
-        productDao = new ArrayListProductDao();
+        productDao = new CustomProductDao();
     }
 
     @Test
@@ -141,7 +141,7 @@ public class ArrayListProductDaoTest {
     public void constructorWhenListIsPassedSavesAllProducts() {
         int count = 10;
         List<Product> productList = createValidProducts(count);
-        ArrayListProductDao arrayListProductDao = new ArrayListProductDao(productList);
+        CustomProductDao arrayListProductDao = new CustomProductDao(productList);
 
         List<Product> actualProductList = arrayListProductDao.findProducts();
 
