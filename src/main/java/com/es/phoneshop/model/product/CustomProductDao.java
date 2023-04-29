@@ -60,16 +60,16 @@ public class CustomProductDao implements ProductDao {
 
     @Override
     public List<Product> findProducts() {
-        List<Product> unmodifiableProductList;
+        List<Product> result;
         readLock.lock();
         try {
-            unmodifiableProductList = productList.stream()
+            result = productList.stream()
                     .filter(product -> product.getPrice() != null && product.getStock() > 0)
                     .toList();
         } finally {
             readLock.unlock();
         }
-        return new ArrayList<>(unmodifiableProductList);
+        return result;
     }
 
     @Override
