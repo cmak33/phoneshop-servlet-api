@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class CustomProductService implements ProductService {
+
     private static CustomProductService instance;
     private final ProductDao productDao;
 

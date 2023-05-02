@@ -11,6 +11,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class CustomProductDao implements ProductDao {
+
     private static CustomProductDao instance;
     private final Lock readLock;
     private final Lock writeLock;

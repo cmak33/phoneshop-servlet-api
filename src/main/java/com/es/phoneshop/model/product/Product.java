@@ -5,6 +5,7 @@ import java.util.Currency;
 import java.util.UUID;
 
 public class Product {
+
     private Long id;
     private String code;
     private String description;

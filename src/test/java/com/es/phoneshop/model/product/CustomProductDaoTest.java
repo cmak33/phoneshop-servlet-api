@@ -13,8 +13,8 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-
 public class CustomProductDaoTest {
+
     private final CustomProductDao productDao = CustomProductDao.getInstance();
 
     private List<Product> createValidProducts(int count) {
