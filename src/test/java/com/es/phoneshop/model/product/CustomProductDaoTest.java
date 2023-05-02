@@ -94,6 +94,11 @@ public class CustomProductDaoTest {
         assertTrue(productDao.getProductList().contains(product));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void givenNullProduct_whenSave_thenThrowNullPointerException() {
+        productDao.save(null);
+    }
+
     @Test(expected = ProductNotFoundException.class)
     public void givenIdOfNotExistingProduct_whenDelete_thenThrowProductNotFoundException() {
         productDao.delete(-1L);
@@ -108,5 +113,10 @@ public class CustomProductDaoTest {
         productDao.delete(productToDelete.getId());
 
         assertEquals(expectedProductList, productDao.getProductList());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void givenNullId_whenDelete_thenThrowNullPointerException() {
+        productDao.delete(null);
     }
 }
