@@ -1,6 +1,7 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.service.CustomProductService;
+import com.es.phoneshop.service.ProductService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -11,7 +12,7 @@ import java.io.IOException;
 
 public class ProductListPageServlet extends HttpServlet {
 
-    private CustomProductService productService;
+    private ProductService productService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -25,7 +26,7 @@ public class ProductListPageServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 
-    public void setProductService(CustomProductService productService) {
+    public void setProductService(ProductService productService) {
         this.productService = productService;
     }
 }
