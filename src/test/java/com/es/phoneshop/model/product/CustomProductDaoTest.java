@@ -4,6 +4,7 @@ import com.es.phoneshop.dao.CustomProductDao;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,23 +14,28 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 public class CustomProductDaoTest {
 
     private final CustomProductDao productDao = CustomProductDao.getInstance();
+    private final int MOCKED_PRODUCTS_COUNT = 3;
+    private final List<Product> mockedProductsList = IntStream.range(0, MOCKED_PRODUCTS_COUNT)
+            .mapToObj(num -> Mockito.mock(Product.class))
+            .toList();
 
-    private List<Product> createValidProducts(int count) {
-        List<Product> productList = new ArrayList<>();
-        BigDecimal price = new BigDecimal(1);
-        int stock = 1;
-        for (int i = 1; i <= count; i++) {
-            Product product = new Product();
-            product.setPrice(price);
-            product.setStock(stock);
-            product.setId((long) i);
-            productList.add(product);
-        }
+    private List<Product> createValidProducts() {
+        List<Product> productList = new ArrayList<>(mockedProductsList);
+        setValuesToMockedProduct(productList.get(0), 1L, 1, BigDecimal.ONE);
+        setValuesToMockedProduct(productList.get(1), 2L, 33, BigDecimal.valueOf(2));
+        setValuesToMockedProduct(productList.get(2), 3L, 44, BigDecimal.TEN);
         return productList;
+    }
+
+    private void setValuesToMockedProduct(Product product, long id, int stock, BigDecimal price) {
+        when(product.getId()).thenReturn(id);
+        when(product.getStock()).thenReturn(stock);
+        when(product.getPrice()).thenReturn(price);
     }
 
     private List<Product> createInvalidProducts(int count) {
@@ -40,8 +46,7 @@ public class CustomProductDaoTest {
 
     @Before
     public void setup() {
-        int validProductsCount = 10;
-        productDao.setProductList(createValidProducts(validProductsCount));
+        productDao.setProductList(createValidProducts());
     }
 
     @Test
