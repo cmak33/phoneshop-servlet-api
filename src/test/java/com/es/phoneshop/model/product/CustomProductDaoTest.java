@@ -1,6 +1,7 @@
 package com.es.phoneshop.model.product;
 
 import com.es.phoneshop.dao.CustomProductDao;
+import com.es.phoneshop.exception.ProductNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -93,13 +94,9 @@ public class CustomProductDaoTest {
         assertTrue(productDao.getProductList().contains(product));
     }
 
-    @Test
-    public void givenIdOfNotExistingProduct_whenDelete_thenDontChangeProductList() {
-        List<Product> expectedProductList = new ArrayList<>(productDao.getProductList());
-
+    @Test(expected = ProductNotFoundException.class)
+    public void givenIdOfNotExistingProduct_whenDelete_thenThrowProductNotFoundException() {
         productDao.delete(-1L);
-
-        assertEquals(expectedProductList, productDao.getProductList());
     }
 
     @Test

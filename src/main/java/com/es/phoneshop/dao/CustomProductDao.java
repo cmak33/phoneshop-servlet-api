@@ -1,5 +1,6 @@
 package com.es.phoneshop.dao;
 
+import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 
 import java.math.BigDecimal;
@@ -83,6 +84,9 @@ public class CustomProductDao implements ProductDao {
 
     @Override
     public void save(Product product) {
+        if (product == null) {
+            throw new NullPointerException("Product was null");
+        }
         writeLock.lock();
         try {
             if (!productList.contains(product)) {
@@ -95,11 +99,14 @@ public class CustomProductDao implements ProductDao {
 
     @Override
     public void delete(Long id) {
+        if (id == null) {
+            throw new NullPointerException("Id was null");
+        }
         writeLock.lock();
         try {
-            productList = productList.stream()
-                    .filter(product -> !id.equals(product.getId()))
-                    .toList();
+            if (!productList.removeIf(product -> id.equals(product.getId()))) {
+                throw new ProductNotFoundException(id);
+            }
         } finally {
             writeLock.unlock();
         }
