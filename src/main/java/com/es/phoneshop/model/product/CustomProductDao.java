@@ -1,7 +1,11 @@
 package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Currency;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
