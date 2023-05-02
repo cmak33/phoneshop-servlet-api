@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -85,16 +84,11 @@ public class CustomProductDao implements ProductDao {
         writeLock.lock();
         try {
             if (!productList.contains(product)) {
-                product.setId(generateId());
                 productList.add(product);
             }
         } finally {
             writeLock.unlock();
         }
-    }
-
-    private Long generateId() {
-        return UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
     }
 
     @Override
