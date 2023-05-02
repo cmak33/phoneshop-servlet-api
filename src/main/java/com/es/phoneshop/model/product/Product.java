@@ -31,8 +31,8 @@ public class Product {
         id = generateId();
     }
 
-    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        this.id = id;
+    public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+        id = generateId();
         this.code = code;
         this.description = description;
         this.price = price;
