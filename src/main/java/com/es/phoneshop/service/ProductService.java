@@ -7,18 +7,22 @@ import com.es.phoneshop.dao.ProductDao;
 import java.util.List;
 
 public class ProductService {
+    private static ProductService instance;
     private final ProductDao productDao;
 
     private ProductService() {
         productDao = CustomProductDao.getInstance();
     }
 
-    private static final class InstanceHolder {
-        private static final ProductService instance = new ProductService();
-    }
-
     public static ProductService getInstance() {
-        return ProductService.InstanceHolder.instance;
+        if (instance == null) {
+            synchronized (ProductService.class) {
+                if (instance == null) {
+                    instance = new ProductService();
+                }
+            }
+        }
+        return instance;
     }
 
     public List<Product> findProducts() {

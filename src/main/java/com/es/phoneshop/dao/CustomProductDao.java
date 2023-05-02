@@ -11,6 +11,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class CustomProductDao implements ProductDao {
+    private static CustomProductDao instance;
     private final Lock readLock;
     private final Lock writeLock;
     private List<Product> productList;
@@ -22,12 +23,15 @@ public class CustomProductDao implements ProductDao {
         writeLock = readWriteLock.writeLock();
     }
 
-    private static final class InstanceHolder {
-        private static final CustomProductDao instance = new CustomProductDao();
-    }
-
     public static CustomProductDao getInstance() {
-        return InstanceHolder.instance;
+        if (instance == null) {
+            synchronized (CustomProductDao.class) {
+                if (instance == null) {
+                    instance = new CustomProductDao();
+                }
+            }
+        }
+        return instance;
     }
 
     private List<Product> createSampleProducts() {
