@@ -11,7 +11,7 @@ import java.util.Optional;
 public class CustomProductService implements ProductService {
 
     private static CustomProductService instance;
-    private final ProductDao productDao;
+    private ProductDao productDao;
 
     private CustomProductService() {
         productDao = CustomProductDao.getInstance();
@@ -38,6 +38,7 @@ public class CustomProductService implements ProductService {
         }
     }
 
+    @Override
     public List<Product> findProducts() {
         return productDao.findProducts();
     }
