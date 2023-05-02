@@ -99,6 +99,19 @@ public class CustomProductDaoTest {
         assertTrue(productDao.getProductList().contains(product));
     }
 
+    @Test
+    public void givenProductWithNotUniqueId_whenSave_thenReplaceOldProduct() {
+        int oldProductIndex = 0;
+        List<Product> productList = new ArrayList<>(productDao.getProductList());
+        Product productToSave = new Product();
+        productToSave.setId(productList.get(oldProductIndex).getId());
+        productList.set(oldProductIndex, productToSave);
+
+        productDao.save(productToSave);
+
+        assertEquals(productList, productDao.getProductList());
+    }
+
     @Test(expected = NullPointerException.class)
     public void givenNullProduct_whenSave_thenThrowNullPointerException() {
         productDao.save(null);

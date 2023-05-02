@@ -89,7 +89,11 @@ public class CustomProductDao implements ProductDao {
         }
         writeLock.lock();
         try {
-            if (!productList.contains(product)) {
+            Optional<Product> productWithSameId = getProduct(product.getId());
+            if (productWithSameId.isPresent()) {
+                int productWithSameIdIndex = productList.indexOf(productWithSameId.get());
+                productList.set(productWithSameIdIndex, product);
+            } else {
                 productList.add(product);
             }
         } finally {
