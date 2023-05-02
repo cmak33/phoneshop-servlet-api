@@ -1,8 +1,8 @@
 package com.es.phoneshop.service;
 
-import com.es.phoneshop.model.product.CustomProductDao;
+import com.es.phoneshop.dao.CustomProductDao;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.dao.ProductDao;
 
 import java.util.List;
 
