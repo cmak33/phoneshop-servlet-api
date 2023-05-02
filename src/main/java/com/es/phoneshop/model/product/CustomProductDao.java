@@ -49,34 +49,29 @@ public class CustomProductDao implements ProductDao {
 
     @Override
     public Optional<Product> getProduct(Long id) {
-        Optional<Product> result;
         if (id != null) {
             readLock.lock();
             try {
-                result = productList.stream()
+                return productList.stream()
                         .filter(product -> id.equals(product.getId()))
                         .findAny();
             } finally {
                 readLock.unlock();
             }
-        } else {
-            result = Optional.empty();
         }
-        return result;
+        return Optional.empty();
     }
 
     @Override
     public List<Product> findProducts() {
-        List<Product> result;
         readLock.lock();
         try {
-            result = productList.stream()
+            return productList.stream()
                     .filter(product -> product.getPrice() != null && product.getStock() > 0)
                     .toList();
         } finally {
             readLock.unlock();
         }
-        return result;
     }
 
     @Override
@@ -93,8 +88,7 @@ public class CustomProductDao implements ProductDao {
 
     @Override
     public void delete(Long id) {
-        Optional<Product> productToDelete = getProduct(id);
-        productToDelete.ifPresent(product -> {
+        getProduct(id).ifPresent(product -> {
             writeLock.lock();
             try {
                 productList.remove(product);
