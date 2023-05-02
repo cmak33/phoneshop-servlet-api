@@ -88,14 +88,14 @@ public class CustomProductDao implements ProductDao {
 
     @Override
     public void delete(Long id) {
-        getProduct(id).ifPresent(product -> {
-            writeLock.lock();
-            try {
-                productList.remove(product);
-            } finally {
-                writeLock.unlock();
-            }
-        });
+        writeLock.lock();
+        try {
+            productList = productList.stream()
+                    .filter(product -> !id.equals(product.getId()))
+                    .toList();
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     public List<Product> getProductList() {
