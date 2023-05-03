@@ -85,7 +85,7 @@ public class CustomProductDao implements ProductDao {
     @Override
     public void save(Product product) {
         if (product == null) {
-            throw new NullPointerException("Product was null");
+            throw new IllegalArgumentException("Product was null");
         }
         writeLock.lock();
         try {
@@ -104,7 +104,7 @@ public class CustomProductDao implements ProductDao {
     @Override
     public void delete(Long id) {
         if (id == null) {
-            throw new NullPointerException("Id was null");
+            throw new IllegalArgumentException("Id was null");
         }
         writeLock.lock();
         try {

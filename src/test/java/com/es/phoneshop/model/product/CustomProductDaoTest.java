@@ -112,8 +112,8 @@ public class CustomProductDaoTest {
         assertEquals(productList, productDao.getProductList());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void givenNullProduct_whenSave_thenThrowNullPointerException() {
+    @Test(expected = IllegalArgumentException.class)
+    public void givenNullProduct_whenSave_thenThrowIllegalArgumentException() {
         productDao.save(null);
     }
 
@@ -133,8 +133,8 @@ public class CustomProductDaoTest {
         assertEquals(expectedProductList, productDao.getProductList());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void givenNullId_whenDelete_thenThrowNullPointerException() {
+    @Test(expected = IllegalArgumentException.class)
+    public void givenNullId_whenDelete_thenThrowIllegalArgumentException() {
         productDao.delete(null);
     }
 }
