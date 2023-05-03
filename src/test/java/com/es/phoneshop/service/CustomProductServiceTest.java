@@ -1,6 +1,7 @@
 package com.es.phoneshop.service;
 
 import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -30,8 +30,8 @@ public class CustomProductServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void givenNullId_whenGetProduct_thenTrowNoSuchElementException() {
+    @Test(expected = ProductNotFoundException.class)
+    public void givenNullId_whenGetProduct_thenTrowProductNotFoundException() {
         customProductService.getProduct(null);
     }
 

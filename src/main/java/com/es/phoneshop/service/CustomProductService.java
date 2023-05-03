@@ -1,11 +1,11 @@
 package com.es.phoneshop.service;
 
 import com.es.phoneshop.dao.CustomProductDao;
-import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.model.product.Product;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class CustomProductService implements ProductService {
@@ -34,7 +34,7 @@ public class CustomProductService implements ProductService {
         if (product.isPresent()) {
             return product.get();
         } else {
-            throw new NoSuchElementException(String.format("Product with id %d was not found", id));
+            throw new ProductNotFoundException(id);
         }
     }
 
