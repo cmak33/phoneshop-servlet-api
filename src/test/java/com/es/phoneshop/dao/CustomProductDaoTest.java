@@ -1,7 +1,7 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.dao;
 
-import com.es.phoneshop.dao.CustomProductDao;
 import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -136,5 +136,43 @@ public class CustomProductDaoTest {
     @Test(expected = IllegalArgumentException.class)
     public void givenNullId_whenDelete_thenThrowIllegalArgumentException() {
         productDao.delete(null);
+    }
+
+    @Test
+    public void givenNullDescription_whenFindProductsByDescription_thenReturnAllProducts() {
+        List<Product> expectedProducts = new ArrayList<>(productDao.getProductList());
+
+        List<Product> actualProducts = productDao.findProductsByDescription(null);
+
+        assertEquals(expectedProducts, actualProducts);
+    }
+
+    @Test
+    public void givenValidDescription_whenFindProductsByDescription_thenReturnMatchingProducts() {
+        List<Product> expectedProducts = mockedProductsList.subList(0, 2);
+        String description = "description";
+        when(mockedProductsList.get(0).getDescription()).thenReturn(description);
+        when(mockedProductsList.get(1).getDescription()).thenReturn(description);
+        when(mockedProductsList.get(2).getDescription()).thenReturn("");
+
+        List<Product> actualProducts = productDao.findProductsByDescription(description);
+
+        assertEquals(expectedProducts, actualProducts);
+    }
+
+    @Test
+    public void givenValidDescription_whenFindProductsByDescription_thenReturnSortedMatchingProducts() {
+        List<Product> expectedProducts = new ArrayList<>() {{
+            add(mockedProductsList.get(2));
+            add(mockedProductsList.get(0));
+        }};
+        String description = "three words description";
+        when(mockedProductsList.get(0).getDescription()).thenReturn("three");
+        when(mockedProductsList.get(1).getDescription()).thenReturn("does not match");
+        when(mockedProductsList.get(2).getDescription()).thenReturn("three words");
+
+        List<Product> actualProducts = productDao.findProductsByDescription(description);
+
+        assertEquals(expectedProducts, actualProducts);
     }
 }

@@ -5,6 +5,8 @@ import com.es.phoneshop.model.product.Product;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +36,10 @@ public class CustomProductDao implements ProductDao {
             }
         }
         return instance;
+    }
+
+    private record ProductDescriptionMatch(Product product, int productDescriptionWordsCount,
+                                           int matchingWordsCount) {
     }
 
     private List<Product> createSampleProducts() {
@@ -80,6 +86,34 @@ public class CustomProductDao implements ProductDao {
         } finally {
             readLock.unlock();
         }
+    }
+
+    @Override
+    public List<Product> findProductsByDescription(String description) {
+        if (description == null || description.isBlank()) {
+            return findProducts();
+        }
+        readLock.lock();
+        try {
+            List<String> descriptionWords = Arrays.asList(description.split(" "));
+            return findProducts().stream()
+                    .map(product -> createProductDescriptionMatch(product, descriptionWords))
+                    .filter(productDescriptionMatch -> productDescriptionMatch.matchingWordsCount > 0)
+                    .sorted(Comparator.comparing(ProductDescriptionMatch::matchingWordsCount).reversed().thenComparing(ProductDescriptionMatch::productDescriptionWordsCount))
+                    .map(productDescriptionMatch -> productDescriptionMatch.product)
+                    .toList();
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    private ProductDescriptionMatch createProductDescriptionMatch(Product product, List<String> descriptionWords) {
+        List<String> productDescriptionWords = Arrays.asList(product.getDescription().split(" "));
+        int matchingWordsCount = (int) descriptionWords.stream()
+                .distinct()
+                .filter(productDescriptionWords::contains)
+                .count();
+        return new ProductDescriptionMatch(product, productDescriptionWords.size(), matchingWordsCount);
     }
 
     @Override

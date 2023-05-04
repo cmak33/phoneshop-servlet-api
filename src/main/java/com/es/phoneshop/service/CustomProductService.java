@@ -44,6 +44,11 @@ public class CustomProductService implements ProductService {
     }
 
     @Override
+    public List<Product> findProductsByDescription(String description) {
+        return productDao.findProductsByDescription(description);
+    }
+
+    @Override
     public void save(Product product) {
         productDao.save(product);
     }

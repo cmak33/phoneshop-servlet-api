@@ -72,4 +72,18 @@ public class CustomProductServiceTest {
 
         verify(productDao).delete(id);
     }
+
+    @Test
+    public void givenDescription_whenFindProductsByDescription_thenReturnListOfProducts() {
+        List<Product> products = new ArrayList<>() {{
+            add(new Product());
+        }};
+        String description = "description";
+        when(productDao.findProductsByDescription(description)).thenReturn(products);
+
+        List<Product> actualProducts = customProductService.findProductsByDescription(description);
+
+        verify(productDao).findProductsByDescription(description);
+        assertEquals(products, actualProducts);
+    }
 }

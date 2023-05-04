@@ -45,7 +45,9 @@ public class ProductListPageServletTest {
         List<Product> productList = new ArrayList<>() {{
             add(new Product());
         }};
-        when(productService.findProducts()).thenReturn(productList);
+        String query = "query";
+        when(request.getParameter("query")).thenReturn(query);
+        when(productService.findProductsByDescription(query)).thenReturn(productList);
 
         servlet.doGet(request, response);
 
