@@ -117,6 +117,13 @@ public class CustomProductDao implements ProductDao {
     }
 
     @Override
+    public List<Product> findProductsByDescriptionWithOrdering(String description, Comparator<Product> comparator) {
+        return findProductsByDescription(description).stream()
+                .sorted(comparator)
+                .toList();
+    }
+
+    @Override
     public void save(Product product) {
         if (product == null) {
             throw new IllegalArgumentException("Product was null");

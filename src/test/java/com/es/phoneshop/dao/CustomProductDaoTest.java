@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -172,6 +173,22 @@ public class CustomProductDaoTest {
         when(mockedProductsList.get(2).getDescription()).thenReturn("three words");
 
         List<Product> actualProducts = productDao.findProductsByDescription(description);
+
+        assertEquals(expectedProducts, actualProducts);
+    }
+
+    @Test
+    public void givenValidDescriptionAndOrdering_whenFindProductsByDescriptionWithOrdering_thenReturnSortedProducts(){
+        List<Product> expectedProducts = new ArrayList<>() {{
+            add(mockedProductsList.get(2));
+            add(mockedProductsList.get(0));
+        }};
+        String description = "three words description";
+        when(mockedProductsList.get(0).getDescription()).thenReturn("three words");
+        when(mockedProductsList.get(1).getDescription()).thenReturn("does not match");
+        when(mockedProductsList.get(2).getDescription()).thenReturn("three");
+
+        List<Product> actualProducts = productDao.findProductsByDescriptionWithOrdering(description, Comparator.comparing(Product::getPrice).reversed());
 
         assertEquals(expectedProducts, actualProducts);
     }

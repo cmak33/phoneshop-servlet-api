@@ -1,10 +1,14 @@
 package com.es.phoneshop.service;
 
+import com.es.phoneshop.configuration.ProductComparatorsConfiguration;
 import com.es.phoneshop.dao.CustomProductDao;
 import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.sorting.SortField;
+import com.es.phoneshop.model.product.sorting.SortOrder;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,9 +16,11 @@ public class CustomProductService implements ProductService {
 
     private static CustomProductService instance;
     private ProductDao productDao;
+    private ProductComparatorsConfiguration productComparatorsConfiguration;
 
     private CustomProductService() {
         productDao = CustomProductDao.getInstance();
+        productComparatorsConfiguration = ProductComparatorsConfiguration.getInstance();
     }
 
     public static CustomProductService getInstance() {
@@ -46,6 +52,12 @@ public class CustomProductService implements ProductService {
     @Override
     public List<Product> findProductsByDescription(String description) {
         return productDao.findProductsByDescription(description);
+    }
+
+    @Override
+    public List<Product> findProductsByDescriptionWithOrdering(String description, SortField sortField, SortOrder sortOrder) {
+        Comparator<Product> productComparator = productComparatorsConfiguration.getComparatorByFieldAndOrder(sortField, sortOrder);
+        return productDao.findProductsByDescriptionWithOrdering(description, productComparator);
     }
 
     @Override

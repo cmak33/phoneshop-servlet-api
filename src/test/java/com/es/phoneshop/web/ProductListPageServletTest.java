@@ -1,6 +1,8 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.sorting.SortField;
+import com.es.phoneshop.model.product.sorting.SortOrder;
 import com.es.phoneshop.service.CustomProductService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -33,24 +35,58 @@ public class ProductListPageServletTest {
     private CustomProductService productService;
 
     private final ProductListPageServlet servlet = new ProductListPageServlet();
+    private List<Product> productList;
 
     @Before
     public void setup() {
+        productList = createProductList();
         servlet.setProductService(productService);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
-    @Test
-    public void testDoGet() throws ServletException, IOException {
-        List<Product> productList = new ArrayList<>() {{
+    private List<Product> createProductList() {
+        return new ArrayList<>() {{
             add(new Product());
         }};
-        String query = "query";
-        when(request.getParameter("query")).thenReturn(query);
-        when(productService.findProductsByDescription(query)).thenReturn(productList);
+    }
+
+    @Test
+    public void givenNullSortOrderAndField_whenDoGet_thenSetProductsAttribute() throws ServletException, IOException {
+        String description = "query";
+        when(request.getParameter("query")).thenReturn(description);
+        when(productService.findProductsByDescription(description)).thenReturn(productList);
 
         servlet.doGet(request, response);
 
+        verify(productService).findProductsByDescription(description);
+        verify(request).setAttribute("products", productList);
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void givenNullDescription_whenDoGet_thenSetProductsAttribute() throws ServletException, IOException {
+        when(productService.findProductsByDescription(null)).thenReturn(productList);
+
+        servlet.doGet(request, response);
+
+        verify(productService).findProductsByDescription(null);
+        verify(request).setAttribute("products", productList);
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void givenValidDescriptionAndOrdering_whenDoGet_thenSetSortedProductsToProductsAttribute() throws ServletException, IOException {
+        String description = "description";
+        String field = SortField.PRICE.toString();
+        String order = SortOrder.ASCENDING.toString();
+        when(request.getParameter("query")).thenReturn(description);
+        when(request.getParameter("field")).thenReturn(field);
+        when(request.getParameter("order")).thenReturn(order);
+        when(productService.findProductsByDescriptionWithOrdering(description, SortField.PRICE, SortOrder.ASCENDING)).thenReturn(productList);
+
+        servlet.doGet(request, response);
+
+        verify(productService).findProductsByDescriptionWithOrdering(description, SortField.PRICE, SortOrder.ASCENDING);
         verify(request).setAttribute("products", productList);
         verify(requestDispatcher).forward(request, response);
     }

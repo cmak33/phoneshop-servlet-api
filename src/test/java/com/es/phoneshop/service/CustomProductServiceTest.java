@@ -1,8 +1,11 @@
 package com.es.phoneshop.service;
 
+import com.es.phoneshop.configuration.ProductComparatorsConfiguration;
 import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.sorting.SortField;
+import com.es.phoneshop.model.product.sorting.SortOrder;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -10,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,12 +25,13 @@ public class CustomProductServiceTest {
 
     @Mock
     private ProductDao productDao;
+    @Mock
+    private ProductComparatorsConfiguration productComparatorsConfiguration;
     @InjectMocks
-    private CustomProductService customProductService;
+    private CustomProductService customProductService = CustomProductService.getInstance();
 
     @Before
     public void setup() {
-        customProductService = CustomProductService.getInstance();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -85,5 +90,22 @@ public class CustomProductServiceTest {
 
         verify(productDao).findProductsByDescription(description);
         assertEquals(products, actualProducts);
+    }
+
+    @Test
+    public void givenDescriptionAndOrdering_whenFindProductsByDescriptionWithOrdering_thenReturnSortedList(){
+        List<Product> products = new ArrayList<>(){{add(new Product());}};
+        Comparator<Product> comparator = Comparator.comparing(Product::getDescription);
+        String description = "description";
+        SortOrder order = SortOrder.ASCENDING;
+        SortField field = SortField.DESCRIPTION;
+        when(productComparatorsConfiguration.getComparatorByFieldAndOrder(field,order)).thenReturn(comparator);
+        when(productDao.findProductsByDescriptionWithOrdering(description,comparator)).thenReturn(products);
+
+        List<Product> actualProducts = customProductService.findProductsByDescriptionWithOrdering(description,field,order);
+
+        verify(productComparatorsConfiguration).getComparatorByFieldAndOrder(field,order);
+        verify(productDao).findProductsByDescriptionWithOrdering(description,comparator);
+        assertEquals(products,actualProducts);
     }
 }
