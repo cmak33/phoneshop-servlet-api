@@ -10,6 +10,8 @@ public interface ProductDao {
 
     Optional<Product> getProduct(Long id);
 
+    Optional<Product> getProductByCode(String code);
+
     List<Product> findProducts();
 
     List<Product> findProductsByDescription(String description);

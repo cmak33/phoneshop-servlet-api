@@ -178,7 +178,7 @@ public class CustomProductDaoTest {
     }
 
     @Test
-    public void givenValidDescriptionAndOrdering_whenFindProductsByDescriptionWithOrdering_thenReturnSortedProducts(){
+    public void givenValidDescriptionAndOrdering_whenFindProductsByDescriptionWithOrdering_thenReturnSortedProducts() {
         List<Product> expectedProducts = new ArrayList<>() {{
             add(mockedProductsList.get(2));
             add(mockedProductsList.get(0));
@@ -191,5 +191,29 @@ public class CustomProductDaoTest {
         List<Product> actualProducts = productDao.findProductsByDescriptionWithOrdering(description, Comparator.comparing(Product::getPrice).reversed());
 
         assertEquals(expectedProducts, actualProducts);
+    }
+
+    @Test
+    public void givenNullCode_whenGetProductByCode_thenReturnOptionalEmpty() {
+        assertEquals(Optional.empty(), productDao.getProductByCode(null));
+    }
+
+    @Test
+    public void givenCodeOfNonExistingProduct_whenGetProductByCode_thenReturnOptionalEmpty() {
+        String code = "non existing code";
+
+        assertEquals(Optional.empty(), productDao.getProductByCode(code));
+    }
+
+    @Test
+    public void givenCodeOfExistingProduct_whenGetProductByCode_thenReturnProduct() {
+        String code = "code";
+        Product expected = mockedProductsList.get(0);
+        when(expected.getCode()).thenReturn(code);
+
+        Optional<Product> actual = productDao.getProductByCode(code);
+
+        assertTrue(actual.isPresent());
+        assertEquals(expected, actual.get());
     }
 }

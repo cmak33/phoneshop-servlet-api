@@ -56,6 +56,21 @@ public class CustomProductDao implements ProductDao {
     }
 
     @Override
+    public Optional<Product> getProductByCode(String code) {
+        if (code != null) {
+            readLock.lock();
+            try {
+                return productList.stream()
+                        .filter(product -> code.equals(product.getCode()))
+                        .findAny();
+            } finally {
+                readLock.unlock();
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public List<Product> findProducts() {
         readLock.lock();
         try {

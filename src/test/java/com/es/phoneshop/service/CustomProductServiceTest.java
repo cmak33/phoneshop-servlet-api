@@ -32,7 +32,7 @@ public class CustomProductServiceTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test(expected = ProductNotFoundException.class)
@@ -93,19 +93,40 @@ public class CustomProductServiceTest {
     }
 
     @Test
-    public void givenDescriptionAndOrdering_whenFindProductsByDescriptionWithOrdering_thenReturnSortedList(){
-        List<Product> products = new ArrayList<>(){{add(new Product());}};
+    public void givenDescriptionAndOrdering_whenFindProductsByDescriptionWithOrdering_thenReturnSortedList() {
+        List<Product> products = new ArrayList<>() {{
+            add(new Product());
+        }};
         Comparator<Product> comparator = Comparator.comparing(Product::getDescription);
         String description = "description";
         SortOrder order = SortOrder.ASCENDING;
         SortField field = SortField.DESCRIPTION;
-        when(productComparatorsConfiguration.getComparatorByFieldAndOrder(field,order)).thenReturn(comparator);
-        when(productDao.findProductsByDescriptionWithOrdering(description,comparator)).thenReturn(products);
+        when(productComparatorsConfiguration.getComparatorByFieldAndOrder(field, order)).thenReturn(comparator);
+        when(productDao.findProductsByDescriptionWithOrdering(description, comparator)).thenReturn(products);
 
-        List<Product> actualProducts = customProductService.findProductsByDescriptionWithOrdering(description,field,order);
+        List<Product> actualProducts = customProductService.findProductsByDescriptionWithOrdering(description, field, order);
 
-        verify(productComparatorsConfiguration).getComparatorByFieldAndOrder(field,order);
-        verify(productDao).findProductsByDescriptionWithOrdering(description,comparator);
-        assertEquals(products,actualProducts);
+        verify(productComparatorsConfiguration).getComparatorByFieldAndOrder(field, order);
+        verify(productDao).findProductsByDescriptionWithOrdering(description, comparator);
+        assertEquals(products, actualProducts);
+    }
+
+    @Test(expected = ProductNotFoundException.class)
+    public void givenCodeOfNonExistingProduct_whenGetProductByCode_thenThrowProductNotFoundException() {
+        String code = "code";
+        when(productDao.getProductByCode(code)).thenReturn(Optional.empty());
+
+        customProductService.getProductByCode(code);
+    }
+
+    @Test
+    public void givenCodeOfExistingProduct_whenGetProductByCode_thenReturnProduct() {
+        Product product = new Product();
+        product.setCode("code");
+        when(productDao.getProductByCode(product.getCode())).thenReturn(Optional.of(product));
+
+        Product actual = customProductService.getProductByCode(product.getCode());
+
+        assertEquals(product, actual);
     }
 }

@@ -3,7 +3,7 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.sorting.SortField;
 import com.es.phoneshop.model.product.sorting.SortOrder;
-import com.es.phoneshop.service.CustomProductService;
+import com.es.phoneshop.service.ProductService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +32,7 @@ public class ProductListPageServletTest {
     @Mock
     private RequestDispatcher requestDispatcher;
     @Mock
-    private CustomProductService productService;
+    private ProductService productService;
 
     private final ProductListPageServlet servlet = new ProductListPageServlet();
     private List<Product> productList;

@@ -45,6 +45,16 @@ public class CustomProductService implements ProductService {
     }
 
     @Override
+    public Product getProductByCode(String code) {
+        Optional<Product> product = productDao.getProductByCode(code);
+        if (product.isPresent()) {
+            return product.get();
+        } else {
+            throw new ProductNotFoundException(code);
+        }
+    }
+
+    @Override
     public List<Product> findProducts() {
         return productDao.findProducts();
     }
