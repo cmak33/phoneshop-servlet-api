@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProductComparatorsConfiguration {
+
     private static ProductComparatorsConfiguration instance;
     private Map<SortField, Comparator<Product>> ascendingComparators;
 
