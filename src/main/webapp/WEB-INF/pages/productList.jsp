@@ -12,6 +12,27 @@
         <input type="text" name="query" value="${param.query}">
         <input type="submit" value="Search">
     </form>
+    <c:if test="${not empty requestScope.productToShowPriceHistory}">
+        <p>Price history of ${requestScope.productToShowPriceHistory.description}</p>
+        <table>
+            <thead>
+            <tr>
+                <td>Start date</td>
+                <td>Price</td>
+            </tr>
+            </thead>
+            <c:forEach var="priceChange" items="${requestScope.productToShowPriceHistory.priceHistory}">
+                <tr>
+                    <td>
+                            ${priceChange.dateOfChange()}
+                    </td>
+                    <td>
+                            ${priceChange.price()}
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:if>
     <table>
         <thead>
         <tr>
@@ -31,14 +52,15 @@
         <c:forEach var="product" items="${products}">
             <tr>
                 <td>
-                    <img class="product-tile" src="${product.imageUrl}">
+                    <img class="product-tile" src="${product.imageUrl}" alt="no image">
                 </td>
                 <td>
                     <a href="${pageContext.servletContext.contextPath}/products/${product.getCode()}">${product.description}</a>
                 </td>
                 <td class="price">
-                    <fmt:formatNumber value="${product.price}" type="currency"
-                                      currencySymbol="${product.currency.symbol}"/>
+                    <a href="?productToShowPriceHistoryId=${product.id}"><fmt:formatNumber value="${product.price}"
+                                                                                           type="currency"
+                                                                                           currencySymbol="${product.currency.symbol}"/></a>
                 </td>
             </tr>
         </c:forEach>

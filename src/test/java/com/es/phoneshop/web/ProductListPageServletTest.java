@@ -1,5 +1,6 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.sorting.SortField;
 import com.es.phoneshop.model.product.sorting.SortOrder;
@@ -18,7 +19,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -88,6 +92,33 @@ public class ProductListPageServletTest {
 
         verify(productService).findProductsByDescriptionWithOrdering(description, SortField.PRICE, SortOrder.ASCENDING);
         verify(request).setAttribute("products", productList);
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void givenInvalidIdForProductWithPriceHistory_whenDoGet_thenDoNotSetProductToShowHistory() throws ServletException, IOException {
+        long id = 1L;
+        when(request.getParameter("productToShowPriceHistoryId")).thenReturn(Long.toString(id));
+        when(productService.getProduct(id)).thenThrow(new ProductNotFoundException(id));
+
+        servlet.doGet(request, response);
+
+        verify(productService).getProduct(id);
+        verify(request, never()).setAttribute(eq("productToShowPriceHistory"), any());
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void givenValidIdForProductWithPriceHistory_whenDoGet_thenSetProductToAttribute() throws ServletException, IOException {
+        Product product = new Product();
+        product.setId(1L);
+        when(request.getParameter("productToShowPriceHistoryId")).thenReturn(product.getId().toString());
+        when(productService.getProduct(product.getId())).thenReturn(product);
+
+        servlet.doGet(request, response);
+
+        verify(productService).getProduct(product.getId());
+        verify(request).setAttribute("productToShowPriceHistory", product);
         verify(requestDispatcher).forward(request, response);
     }
 }
