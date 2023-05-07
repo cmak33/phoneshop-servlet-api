@@ -33,15 +33,65 @@ public class Product {
         id = generateId();
     }
 
-    public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl, List<PriceChange> priceHistory) {
+    private Product(ProductBuilder productBuilder) {
         id = generateId();
-        this.code = code;
-        this.description = description;
-        this.price = price;
-        this.currency = currency;
-        this.stock = stock;
-        this.imageUrl = imageUrl;
-        this.priceHistory = priceHistory;
+        this.code = productBuilder.code;
+        this.description = productBuilder.description;
+        this.price = productBuilder.price;
+        this.currency = productBuilder.currency;
+        this.stock = productBuilder.stock;
+        this.imageUrl = productBuilder.imageUrl;
+        this.priceHistory = productBuilder.priceHistory;
+    }
+
+    public static class ProductBuilder {
+
+        private String code;
+        private String description;
+        private BigDecimal price;
+        private Currency currency;
+        private int stock;
+        private String imageUrl;
+        private List<PriceChange> priceHistory;
+
+        public ProductBuilder setCode(String code) {
+            this.code = code;
+            return this;
+        }
+
+        public ProductBuilder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public ProductBuilder setPrice(BigDecimal price) {
+            this.price = price;
+            return this;
+        }
+
+        public ProductBuilder setCurrency(Currency currency) {
+            this.currency = currency;
+            return this;
+        }
+
+        public ProductBuilder setStock(int stock) {
+            this.stock = stock;
+            return this;
+        }
+
+        public ProductBuilder setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+            return this;
+        }
+
+        public ProductBuilder setPriceHistory(List<PriceChange> priceHistory) {
+            this.priceHistory = priceHistory;
+            return this;
+        }
+
+        public Product build() {
+            return new Product(this);
+        }
     }
 
     private Long generateId() {

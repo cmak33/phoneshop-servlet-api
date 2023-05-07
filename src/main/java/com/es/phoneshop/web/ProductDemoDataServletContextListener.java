@@ -31,22 +31,163 @@ public class ProductDemoDataServletContextListener implements ServletContextList
     private List<Product> createSampleProducts() {
         List<Product> result = new ArrayList<>();
         Currency usd = Currency.getInstance("USD");
-        result.add(new Product("sgs", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg", new ArrayList<>() {{
-            add(new PriceChange(createDate(2022, Calendar.JANUARY, 1), BigDecimal.valueOf(150)));
-            add(new PriceChange(createDate(2023, Calendar.MARCH, 23), BigDecimal.valueOf(100)));
-        }}));
-        result.add(new Product("sgs2", "Samsung Galaxy S II", new BigDecimal(200), usd, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg", new ArrayList<>()));
-        result.add(new Product("sgs3", "Samsung Galaxy S III", new BigDecimal(300), usd, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20III.jpg", new ArrayList<>()));
-        result.add(new Product("iphone", "Apple iPhone", new BigDecimal(200), usd, 10, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Apple/Apple%20iPhone.jpg", new ArrayList<>()));
-        result.add(new Product("iphone6", "Apple iPhone 6", new BigDecimal(1000), usd, 30, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Apple/Apple%20iPhone%206.jpg", new ArrayList<>()));
-        result.add(new Product("htces4g", "HTC EVO Shift 4G", new BigDecimal(320), usd, 3, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/HTC/HTC%20EVO%20Shift%204G.jpg", new ArrayList<>()));
-        result.add(new Product("sec901", "Sony Ericsson C901", new BigDecimal(420), usd, 30, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Sony/Sony%20Ericsson%20C901.jpg", new ArrayList<>()));
-        result.add(new Product("xperiaxz", "Sony Xperia XZ", new BigDecimal(120), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Sony/Sony%20Xperia%20XZ.jpg", new ArrayList<>()));
-        result.add(new Product("nokia3310", "Nokia 3310", new BigDecimal(70), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Nokia/Nokia%203310.jpg", new ArrayList<>()));
-        result.add(new Product("palmp", "Palm Pixi", new BigDecimal(170), usd, 30, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Palm/Palm%20Pixi.jpg", new ArrayList<>()));
-        result.add(new Product("simc56", "Siemens C56", new BigDecimal(70), usd, 20, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20C56.jpg", new ArrayList<>()));
-        result.add(new Product("simc61", "Siemens C61", new BigDecimal(80), usd, 30, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20C61.jpg", new ArrayList<>()));
-        result.add(new Product("simsxg75", "Siemens SXG75", new BigDecimal(150), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg", new ArrayList<>()));
+        result.add(new Product.ProductBuilder()
+                .setCode("sgs")
+                .setDescription("Samsung Galaxy S")
+                .setPrice(new BigDecimal(100))
+                .setCurrency(usd)
+                .setStock(100)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2022, Calendar.JANUARY, 1), BigDecimal.valueOf(150)));
+                    add(new PriceChange(createDate(2023, Calendar.MARCH, 23), BigDecimal.valueOf(100)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("sgs2")
+                .setDescription("Samsung Galaxy S II")
+                .setPrice(new BigDecimal(200))
+                .setCurrency(usd)
+                .setStock(0)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2019, Calendar.JANUARY, 22), BigDecimal.valueOf(150)));
+                    add(new PriceChange(createDate(2023, Calendar.MARCH, 23), BigDecimal.valueOf(200)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("sgs3")
+                .setDescription("Samsung Galaxy S III")
+                .setPrice(new BigDecimal(300))
+                .setCurrency(usd)
+                .setStock(5)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20III.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2019, Calendar.JANUARY, 12), BigDecimal.valueOf(150)));
+                    add(new PriceChange(createDate(2023, Calendar.MARCH, 21), BigDecimal.valueOf(300)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("iphone")
+                .setDescription("Apple iPhone")
+                .setPrice(new BigDecimal(200))
+                .setCurrency(usd)
+                .setStock(10)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Apple/Apple%20iPhone.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2015, Calendar.JANUARY, 12), BigDecimal.valueOf(150)));
+                    add(new PriceChange(createDate(2023, Calendar.MARCH, 20), BigDecimal.valueOf(250)));
+                    add(new PriceChange(createDate(2023, Calendar.MARCH, 21), BigDecimal.valueOf(200)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("iphone6")
+                .setDescription("Apple iPhone 6")
+                .setPrice(new BigDecimal(1000))
+                .setCurrency(usd)
+                .setStock(10)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Apple/Apple%20iPhone.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2011, Calendar.APRIL, 12), BigDecimal.valueOf(150)));
+                    add(new PriceChange(createDate(2023, Calendar.APRIL, 21), BigDecimal.valueOf(1000)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("htces4g")
+                .setDescription("HTC EVO Shift 4G")
+                .setPrice(new BigDecimal(320))
+                .setCurrency(usd)
+                .setStock(123)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/HTC/HTC%20EVO%20Shift%204G.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2018, Calendar.DECEMBER, 1), BigDecimal.valueOf(150)));
+                    add(new PriceChange(createDate(2023, Calendar.APRIL, 21), BigDecimal.valueOf(320)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("sec901")
+                .setDescription("Sony Ericsson C901")
+                .setPrice(new BigDecimal(420))
+                .setCurrency(usd)
+                .setStock(300)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Sony/Sony%20Ericsson%20C901.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2018, Calendar.DECEMBER, 11), BigDecimal.valueOf(1500)));
+                    add(new PriceChange(createDate(2023, Calendar.APRIL, 21), BigDecimal.valueOf(420)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("xperiaxz")
+                .setDescription("Sony Xperia XZ")
+                .setPrice(new BigDecimal(120))
+                .setCurrency(usd)
+                .setStock(100)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Sony/Sony%20Xperia%20XZ.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2020, Calendar.SEPTEMBER, 11), BigDecimal.valueOf(150)));
+                    add(new PriceChange(createDate(2022, Calendar.SEPTEMBER, 21), BigDecimal.valueOf(120)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("nokia3310")
+                .setDescription("Nokia 3310")
+                .setPrice(new BigDecimal(70))
+                .setCurrency(usd)
+                .setStock(100)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Nokia/Nokia%203310.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2020, Calendar.SEPTEMBER, 11), BigDecimal.valueOf(250)));
+                    add(new PriceChange(createDate(2022, Calendar.SEPTEMBER, 21), BigDecimal.valueOf(100)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("palmp")
+                .setDescription("Palm Pixi")
+                .setPrice(new BigDecimal(170))
+                .setCurrency(usd)
+                .setStock(30)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Palm/Palm%20Pixi.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2020, Calendar.SEPTEMBER, 11), BigDecimal.valueOf(250)));
+                    add(new PriceChange(createDate(2022, Calendar.SEPTEMBER, 21), BigDecimal.valueOf(170)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("simc56")
+                .setDescription("Siemens C56")
+                .setPrice(new BigDecimal(70))
+                .setCurrency(usd)
+                .setStock(20)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20C56.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2020, Calendar.SEPTEMBER, 11), BigDecimal.valueOf(50)));
+                    add(new PriceChange(createDate(2022, Calendar.SEPTEMBER, 21), BigDecimal.valueOf(70)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("simc61")
+                .setDescription("Siemens C61")
+                .setPrice(new BigDecimal(80))
+                .setCurrency(usd)
+                .setStock(30)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20C61.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2020, Calendar.SEPTEMBER, 11), BigDecimal.valueOf(50)));
+                    add(new PriceChange(createDate(2022, Calendar.SEPTEMBER, 11), BigDecimal.valueOf(80)));
+                }})
+                .build());
+        result.add(new Product.ProductBuilder()
+                .setCode("simsxg75")
+                .setDescription("Siemens SXG75")
+                .setPrice(new BigDecimal(150))
+                .setCurrency(usd)
+                .setStock(40)
+                .setImageUrl("https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg")
+                .setPriceHistory(new ArrayList<>() {{
+                    add(new PriceChange(createDate(2020, Calendar.SEPTEMBER, 11), BigDecimal.valueOf(250)));
+                    add(new PriceChange(createDate(2021, Calendar.OCTOBER, 11), BigDecimal.valueOf(150)));
+                }})
+                .build());
         return result;
     }
 

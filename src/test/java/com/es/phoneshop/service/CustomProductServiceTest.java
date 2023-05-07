@@ -121,8 +121,9 @@ public class CustomProductServiceTest {
 
     @Test
     public void givenCodeOfExistingProduct_whenGetProductByCode_thenReturnProduct() {
-        Product product = new Product();
-        product.setCode("code");
+        Product product = new Product.ProductBuilder()
+                .setCode("code")
+                .build();
         when(productDao.getProductByCode(product.getCode())).thenReturn(Optional.of(product));
 
         Product actual = customProductService.getProductByCode(product.getCode());
