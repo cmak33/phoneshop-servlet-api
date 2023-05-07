@@ -36,12 +36,8 @@ public class CustomProductService implements ProductService {
 
     @Override
     public Product getProduct(Long id) {
-        Optional<Product> product = productDao.getProduct(id);
-        if (product.isPresent()) {
-            return product.get();
-        } else {
-            throw new ProductNotFoundException(id);
-        }
+        return productDao.getProduct(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     @Override
