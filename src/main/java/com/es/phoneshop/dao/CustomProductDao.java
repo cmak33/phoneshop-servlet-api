@@ -90,10 +90,13 @@ public class CustomProductDao implements ProductDao {
         readLock.lock();
         try {
             List<String> descriptionWords = Arrays.asList(description.toLowerCase().split(" "));
+            Comparator<ProductDescriptionMatch> descriptionMatchComparator = Comparator.comparing(ProductDescriptionMatch::matchingWordsCount)
+                    .reversed()
+                    .thenComparing(ProductDescriptionMatch::productDescriptionWordsCount);
             return findProducts().stream()
                     .map(product -> createProductDescriptionMatch(product, descriptionWords))
                     .filter(productDescriptionMatch -> productDescriptionMatch.matchingWordsCount > 0)
-                    .sorted(Comparator.comparing(ProductDescriptionMatch::matchingWordsCount).reversed().thenComparing(ProductDescriptionMatch::productDescriptionWordsCount))
+                    .sorted(descriptionMatchComparator)
                     .map(productDescriptionMatch -> productDescriptionMatch.product)
                     .toList();
         } finally {
