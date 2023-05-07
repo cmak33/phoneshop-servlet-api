@@ -13,7 +13,6 @@ public class ProductComparatorsConfiguration {
     private static ProductComparatorsConfiguration instance;
     private Map<SortField, Comparator<Product>> ascendingComparators;
 
-
     private ProductComparatorsConfiguration() {
         this.ascendingComparators = createComparators();
     }
