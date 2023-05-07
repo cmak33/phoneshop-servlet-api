@@ -2,6 +2,7 @@ package com.es.phoneshop.dao;
 
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.ProductDescriptionMatch;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -35,10 +36,6 @@ public class CustomProductDao implements ProductDao {
             }
         }
         return instance;
-    }
-
-    private record ProductDescriptionMatch(Product product, int productDescriptionWordsCount,
-                                           int matchingWordsCount) {
     }
 
     @Override
@@ -96,9 +93,9 @@ public class CustomProductDao implements ProductDao {
                     .thenComparing(ProductDescriptionMatch::productDescriptionWordsCount);
             return findProducts().stream()
                     .map(product -> createProductDescriptionMatch(product, descriptionWords))
-                    .filter(productDescriptionMatch -> productDescriptionMatch.matchingWordsCount > 0)
+                    .filter(productDescriptionMatch -> productDescriptionMatch.matchingWordsCount() > 0)
                     .sorted(descriptionMatchComparator)
-                    .map(productDescriptionMatch -> productDescriptionMatch.product)
+                    .map(ProductDescriptionMatch::product)
                     .toList();
         } finally {
             readLock.unlock();
