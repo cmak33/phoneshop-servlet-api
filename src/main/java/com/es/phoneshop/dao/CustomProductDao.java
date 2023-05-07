@@ -89,7 +89,7 @@ public class CustomProductDao implements ProductDao {
         }
         readLock.lock();
         try {
-            List<String> descriptionWords = Arrays.asList(description.split(" "));
+            List<String> descriptionWords = Arrays.asList(description.toLowerCase().split(" "));
             return findProducts().stream()
                     .map(product -> createProductDescriptionMatch(product, descriptionWords))
                     .filter(productDescriptionMatch -> productDescriptionMatch.matchingWordsCount > 0)
@@ -102,7 +102,7 @@ public class CustomProductDao implements ProductDao {
     }
 
     private ProductDescriptionMatch createProductDescriptionMatch(Product product, List<String> descriptionWords) {
-        List<String> productDescriptionWords = Arrays.asList(product.getDescription().split(" "));
+        List<String> productDescriptionWords = Arrays.asList(product.getDescription().toLowerCase().split(" "));
         int matchingWordsCount = (int) descriptionWords.stream()
                 .distinct()
                 .filter(productDescriptionWords::contains)

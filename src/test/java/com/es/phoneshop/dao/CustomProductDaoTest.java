@@ -178,6 +178,22 @@ public class CustomProductDaoTest {
     }
 
     @Test
+    public void givenUppercaseDescription_whenFindProductsByDescription_thenReturnSortedMatchingProducts() {
+        List<Product> expectedProducts = new ArrayList<>() {{
+            add(mockedProductsList.get(1));
+            add(mockedProductsList.get(0));
+        }};
+        String description = "UPPERCASE DESCRIPTION";
+        when(mockedProductsList.get(0).getDescription()).thenReturn("upperCase");
+        when(mockedProductsList.get(1).getDescription()).thenReturn("uppercase Description");
+        when(mockedProductsList.get(2).getDescription()).thenReturn("DOES NOT MATCH");
+
+        List<Product> actualProducts = productDao.findProductsByDescription(description);
+
+        assertEquals(expectedProducts, actualProducts);
+    }
+
+    @Test
     public void givenValidDescriptionAndOrdering_whenFindProductsByDescriptionWithOrdering_thenReturnSortedProducts() {
         List<Product> expectedProducts = new ArrayList<>() {{
             add(mockedProductsList.get(2));
