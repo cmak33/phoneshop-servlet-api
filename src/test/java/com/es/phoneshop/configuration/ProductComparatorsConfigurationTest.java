@@ -30,13 +30,13 @@ public class ProductComparatorsConfigurationTest {
 
     @Test
     public void givenAscendingOrderAndDescriptionField_whenGetComparatorByFieldAndOrder_thenReturnComparator() {
-        Comparator<Product> comparator = Comparator.comparing(Product::getDescription);
-        when(ascendingComparators.get(SortField.DESCRIPTION)).thenReturn(comparator);
+        Comparator<Product> expectedComparator = Comparator.comparing(Product::getDescription);
+        when(ascendingComparators.get(SortField.DESCRIPTION)).thenReturn(expectedComparator);
 
         Comparator<Product> actualComparator = productComparatorsConfiguration.getComparatorByFieldAndOrder(SortField.DESCRIPTION, SortOrder.ASCENDING);
 
         verify(ascendingComparators).get(SortField.DESCRIPTION);
-        assertEquals(comparator, actualComparator);
+        assertEquals(expectedComparator, actualComparator);
     }
 
     @Test
