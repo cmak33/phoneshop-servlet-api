@@ -19,10 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -95,17 +92,21 @@ public class ProductListPageServletTest {
         verify(requestDispatcher).forward(request, response);
     }
 
-    @Test
-    public void givenInvalidIdForProductWithPriceHistory_whenDoGet_thenDoNotSetProductToShowHistory() throws ServletException, IOException {
+    @Test(expected = ProductNotFoundException.class)
+    public void givenNonExistingIdForProductWithPriceHistory_whenDoGet_thenThrowProductNotFoundException() throws ServletException, IOException {
         long id = 1L;
         when(request.getParameter("productToShowPriceHistoryId")).thenReturn(Long.toString(id));
         when(productService.getProduct(id)).thenThrow(new ProductNotFoundException(id));
 
         servlet.doGet(request, response);
+    }
 
-        verify(productService).getProduct(id);
-        verify(request, never()).setAttribute(eq("productToShowPriceHistory"), any());
-        verify(requestDispatcher).forward(request, response);
+    @Test(expected = NumberFormatException.class)
+    public void givenIdThatCanNotBeCastedToNumber_whenDoGet_thenThrowNumberFormatException() throws ServletException, IOException {
+        String id = "invalid id";
+        when(request.getParameter("productToShowPriceHistoryId")).thenReturn(id);
+
+        servlet.doGet(request, response);
     }
 
     @Test

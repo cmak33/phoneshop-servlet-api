@@ -1,6 +1,5 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.sorting.SortField;
 import com.es.phoneshop.model.product.sorting.SortOrder;
@@ -12,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,21 +32,16 @@ public class ProductListPageServlet extends HttpServlet {
         String field = request.getParameter("field");
         String order = request.getParameter("order");
         String productToShowPriceHistoryId = request.getParameter("productToShowPriceHistoryId");
-        if (productToShowPriceHistoryId != null) {
-            setProductWithPriceHistoryToRequestById(productToShowPriceHistoryId, request);
+        if (!StringUtils.isBlank(productToShowPriceHistoryId)) {
+            request.setAttribute("productToShowPriceHistory", getProductWithPriceHistoryById(productToShowPriceHistoryId));
         }
         request.setAttribute("products", receiveProducts(description, field, order));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 
-    private void setProductWithPriceHistoryToRequestById(String productToShowPriceHistoryId, HttpServletRequest request) {
-        try {
-            long id = Long.parseLong(productToShowPriceHistoryId);
-            Product product = productService.getProduct(id);
-            request.setAttribute("productToShowPriceHistory", product);
-        } catch (NumberFormatException | ProductNotFoundException exception) {
-            exception.printStackTrace();
-        }
+    private Product getProductWithPriceHistoryById(String productToShowPriceHistoryId) {
+        long id = Long.parseLong(productToShowPriceHistoryId);
+        return productService.getProduct(id);
     }
 
     private List<Product> receiveProducts(String description, String field, String order) {

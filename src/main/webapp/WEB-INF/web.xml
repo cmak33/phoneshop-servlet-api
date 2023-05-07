@@ -34,4 +34,18 @@
         <url-pattern>/products/*</url-pattern>
     </servlet-mapping>
 
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/pages/exceptions/internalServerException.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/pages/exceptions/notFoundException.jsp</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>com.es.phoneshop.exception.ProductNotFoundException</exception-type>
+        <location>/WEB-INF/pages/exceptions/productNotFoundException.jsp</location>
+    </error-page>
 </web-app>

@@ -53,17 +53,12 @@ public class ProductDetailsPageServletTest {
         verify(requestDispatcher).forward(request, response);
     }
 
-    @Test
-    public void givenInvalidCode_whenDoGet_thenRedirectToNotFoundPage() throws ServletException, IOException {
+    @Test(expected = ProductNotFoundException.class)
+    public void givenInvalidCode_whenDoGet_thenThrowProductNotFoundException() throws ServletException, IOException {
         String code = "code";
         when(request.getPathInfo()).thenReturn(String.format("/%s", code));
         when(productService.getProductByCode(code)).thenThrow(new ProductNotFoundException(code));
 
         productDetailsPageServlet.doGet(request, response);
-
-        verify(productService).getProductByCode(code);
-        verify(request).getRequestDispatcher("/WEB-INF/pages/exceptions/notFoundException.jsp");
-        verify(requestDispatcher).forward(request, response);
-
     }
 }
