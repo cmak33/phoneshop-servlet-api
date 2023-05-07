@@ -2,6 +2,7 @@ package com.es.phoneshop.dao;
 
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +58,7 @@ public class CustomProductDao implements ProductDao {
 
     @Override
     public Optional<Product> getProductByCode(String code) {
-        if (code != null) {
+        if (!StringUtils.isBlank(code)) {
             readLock.lock();
             try {
                 return productList.stream()
@@ -84,7 +85,7 @@ public class CustomProductDao implements ProductDao {
 
     @Override
     public List<Product> findProductsByDescription(String description) {
-        if (description == null || description.isBlank()) {
+        if (StringUtils.isBlank(description)) {
             return findProducts();
         }
         readLock.lock();
