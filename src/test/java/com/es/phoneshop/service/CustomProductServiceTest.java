@@ -110,24 +110,4 @@ public class CustomProductServiceTest {
         verify(productDao).findProductsByDescriptionWithOrdering(description, comparator);
         assertEquals(products, actualProducts);
     }
-
-    @Test(expected = ProductNotFoundException.class)
-    public void givenCodeOfNonExistingProduct_whenGetProductByCode_thenThrowProductNotFoundException() {
-        String code = "code";
-        when(productDao.getProductByCode(code)).thenReturn(Optional.empty());
-
-        customProductService.getProductByCode(code);
-    }
-
-    @Test
-    public void givenCodeOfExistingProduct_whenGetProductByCode_thenReturnProduct() {
-        Product product = new Product.ProductBuilder()
-                .setCode("code")
-                .build();
-        when(productDao.getProductByCode(product.getCode())).thenReturn(Optional.of(product));
-
-        Product actual = customProductService.getProductByCode(product.getCode());
-
-        assertEquals(product, actual);
-    }
 }

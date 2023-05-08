@@ -1,6 +1,7 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.dao.CustomProductDao;
+import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.model.product.PriceChange;
 import com.es.phoneshop.model.product.Product;
 import jakarta.servlet.ServletContextEvent;
@@ -15,17 +16,19 @@ import java.util.List;
 
 public class ProductDemoDataServletContextListener implements ServletContextListener {
 
+    private ProductDao productDao;
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         boolean shouldInsertData = Boolean.parseBoolean(servletContextEvent.getServletContext().getInitParameter("insertDemoData"));
         if (shouldInsertData) {
+            productDao = CustomProductDao.getInstance();
             insertDataToProductDao();
         }
     }
 
     private void insertDataToProductDao() {
-        CustomProductDao customProductDao = CustomProductDao.getInstance();
-        createSampleProducts().forEach(customProductDao::save);
+        createSampleProducts().forEach(productDao::save);
     }
 
     private List<Product> createSampleProducts() {

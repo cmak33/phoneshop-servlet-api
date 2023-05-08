@@ -23,9 +23,13 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String code = req.getPathInfo().substring(1);
-        Product product = productService.getProductByCode(code);
-        req.setAttribute("product", product);
-        req.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(req, resp);
+        if (req.getPathInfo() != null && req.getPathInfo().length() > 1) {
+            long id = Long.parseLong(req.getPathInfo().substring(1));
+            Product product = productService.getProduct(id);
+            req.setAttribute("product", product);
+            req.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(req, resp);
+        } else {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }

@@ -10,11 +10,10 @@ import com.es.phoneshop.model.product.sorting.SortOrder;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 public class CustomProductService implements ProductService {
 
-    private static CustomProductService instance;
+    private static volatile CustomProductService instance;
     private ProductDao productDao;
     private ProductComparatorsConfiguration productComparatorsConfiguration;
 
@@ -40,15 +39,6 @@ public class CustomProductService implements ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
-    @Override
-    public Product getProductByCode(String code) {
-        Optional<Product> product = productDao.getProductByCode(code);
-        if (product.isPresent()) {
-            return product.get();
-        } else {
-            throw new ProductNotFoundException(code);
-        }
-    }
 
     @Override
     public List<Product> findProducts() {

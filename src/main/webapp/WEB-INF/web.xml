@@ -24,6 +24,16 @@
         <servlet-class>com.es.phoneshop.web.ProductDetailsPageServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>productPriceHistory</servlet-name>
+        <servlet-class>com.es.phoneshop.web.ProductPriceHistoryPageServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>productSort</servlet-name>
+        <servlet-class>com.es.phoneshop.web.ProductSortServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>productList</servlet-name>
         <url-pattern>/products</url-pattern>
@@ -32,6 +42,16 @@
     <servlet-mapping>
         <servlet-name>productDetails</servlet-name>
         <url-pattern>/products/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>productPriceHistory</servlet-name>
+        <url-pattern>/products/price-history/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>productSort</servlet-name>
+        <url-pattern>/products/sort</url-pattern>
     </servlet-mapping>
 
     <error-page>

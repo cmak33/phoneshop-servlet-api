@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class ProductComparatorsConfiguration {
 
-    private static ProductComparatorsConfiguration instance;
+    private static volatile ProductComparatorsConfiguration instance;
     private Map<SortField, Comparator<Product>> ascendingComparators;
 
     private ProductComparatorsConfiguration() {

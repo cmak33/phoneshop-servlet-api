@@ -208,28 +208,4 @@ public class CustomProductDaoTest {
 
         assertEquals(expectedProducts, actualProducts);
     }
-
-    @Test
-    public void givenNullCode_whenGetProductByCode_thenReturnOptionalEmpty() {
-        assertEquals(Optional.empty(), productDao.getProductByCode(null));
-    }
-
-    @Test
-    public void givenCodeOfNonExistingProduct_whenGetProductByCode_thenReturnOptionalEmpty() {
-        String code = "non existing code";
-
-        assertEquals(Optional.empty(), productDao.getProductByCode(code));
-    }
-
-    @Test
-    public void givenCodeOfExistingProduct_whenGetProductByCode_thenReturnProduct() {
-        String code = "code";
-        Product expected = mockedProductsList.get(0);
-        when(expected.getCode()).thenReturn(code);
-
-        Optional<Product> actual = productDao.getProductByCode(code);
-
-        assertTrue(actual.isPresent());
-        assertEquals(expected, actual.get());
-    }
 }

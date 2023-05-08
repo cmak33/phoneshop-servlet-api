@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class CustomProductDao implements ProductDao {
 
-    private static CustomProductDao instance;
+    private static volatile CustomProductDao instance;
     private final Lock readLock;
     private final Lock writeLock;
     private List<Product> productList;
@@ -45,21 +45,6 @@ public class CustomProductDao implements ProductDao {
             try {
                 return productList.stream()
                         .filter(product -> id.equals(product.getId()))
-                        .findAny();
-            } finally {
-                readLock.unlock();
-            }
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Product> getProductByCode(String code) {
-        if (!StringUtils.isBlank(code)) {
-            readLock.lock();
-            try {
-                return productList.stream()
-                        .filter(product -> code.equals(product.getCode()))
                         .findAny();
             } finally {
                 readLock.unlock();
