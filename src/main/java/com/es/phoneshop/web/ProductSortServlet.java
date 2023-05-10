@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,10 +45,17 @@ public class ProductSortServlet extends HttpServlet {
     private List<Product> receiveProducts(String description, String field, String order) {
         SortField sortField = EnumUtils.getEnumIgnoreCase(SortField.class, field);
         SortOrder sortOrder = EnumUtils.getEnumIgnoreCase(SortOrder.class, order);
+        boolean isDescriptionValid = !StringUtils.isBlank(description);
         if (sortField != null && sortOrder != null) {
-            return productService.findProductsByDescriptionWithOrdering(description, sortField, sortOrder);
-        } else {
+            if (isDescriptionValid) {
+                return productService.findProductsByDescriptionWithOrdering(description, sortField, sortOrder);
+            } else {
+                return productService.findSortedProducts(sortField, sortOrder);
+            }
+        } else if (isDescriptionValid) {
             return productService.findProductsByDescription(description);
+        } else {
+            return productService.findProducts();
         }
     }
 }

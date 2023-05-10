@@ -46,6 +46,12 @@ public class CustomProductService implements ProductService {
     }
 
     @Override
+    public List<Product> findSortedProducts(SortField sortField, SortOrder sortOrder) {
+        Comparator<Product> productComparator = productComparatorsConfiguration.getComparatorByFieldAndOrder(sortField, sortOrder);
+        return productDao.findSortedProducts(productComparator);
+    }
+
+    @Override
     public List<Product> findProductsByDescription(String description) {
         return productDao.findProductsByDescription(description);
     }

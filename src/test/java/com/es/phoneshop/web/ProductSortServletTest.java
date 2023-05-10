@@ -91,4 +91,42 @@ public class ProductSortServletTest {
         verify(response).getWriter();
         verify(writer).write(json);
     }
+
+    @Test
+    public void givenInvalidDescription_whenDoGet_thenWriteSortedProducts() throws IOException {
+        String field = SortField.PRICE.toString();
+        String order = SortOrder.ASCENDING.toString();
+        String json = "json";
+        when(request.getParameter("query")).thenReturn(null);
+        when(request.getParameter("field")).thenReturn(field);
+        when(request.getParameter("order")).thenReturn(order);
+        when(productService.findSortedProducts(SortField.PRICE, SortOrder.ASCENDING)).thenReturn(productList);
+        when(response.getWriter()).thenReturn(writer);
+        when(objectMapper.writeValueAsString(any())).thenReturn(json);
+
+        servlet.doGet(request, response);
+
+        verify(productService).findSortedProducts(SortField.PRICE, SortOrder.ASCENDING);
+        verify(response).getWriter();
+        verify(writer).write(json);
+    }
+
+    @Test
+    public void givenInvalidDescriptionAndOrdering_whenDoGet_thenWriteAllProducts() throws IOException {
+        String field = "invalid field";
+        String order = "invalid order";
+        String json = "json";
+        when(request.getParameter("query")).thenReturn(null);
+        when(request.getParameter("field")).thenReturn(field);
+        when(request.getParameter("order")).thenReturn(order);
+        when(productService.findProducts()).thenReturn(productList);
+        when(response.getWriter()).thenReturn(writer);
+        when(objectMapper.writeValueAsString(any())).thenReturn(json);
+
+        servlet.doGet(request, response);
+
+        verify(productService).findProducts();
+        verify(response).getWriter();
+        verify(writer).write(json);
+    }
 }

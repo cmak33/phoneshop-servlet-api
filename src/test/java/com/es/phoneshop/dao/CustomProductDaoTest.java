@@ -140,15 +140,6 @@ public class CustomProductDaoTest {
     }
 
     @Test
-    public void givenNullDescription_whenFindProductsByDescription_thenReturnAllProducts() {
-        List<Product> expectedProducts = new ArrayList<>(productDao.getProductList());
-
-        List<Product> actualProducts = productDao.findProductsByDescription(null);
-
-        assertEquals(expectedProducts, actualProducts);
-    }
-
-    @Test
     public void givenValidDescription_whenFindProductsByDescription_thenReturnMatchingProducts() {
         List<Product> expectedProducts = mockedProductsList.subList(0, 2);
         String description = "description";
@@ -205,6 +196,23 @@ public class CustomProductDaoTest {
         when(mockedProductsList.get(2).getDescription()).thenReturn("three");
 
         List<Product> actualProducts = productDao.findProductsByDescriptionWithOrdering(description, Comparator.comparing(Product::getPrice).reversed());
+
+        assertEquals(expectedProducts, actualProducts);
+    }
+
+    @Test
+    public void givenValidComparator_whenFindSortedProducts_thenReturnSortedProducts() {
+        List<Product> expectedProducts = new ArrayList<>() {{
+            add(mockedProductsList.get(2));
+            add(mockedProductsList.get(1));
+            add(mockedProductsList.get(0));
+        }};
+        Comparator<Product> comparator = Comparator.comparing(Product::getPrice);
+        when(mockedProductsList.get(0).getPrice()).thenReturn(BigDecimal.valueOf(100));
+        when(mockedProductsList.get(1).getPrice()).thenReturn(BigDecimal.valueOf(50));
+        when(mockedProductsList.get(2).getPrice()).thenReturn(BigDecimal.valueOf(10));
+
+        List<Product> actualProducts = productDao.findSortedProducts(comparator);
 
         assertEquals(expectedProducts, actualProducts);
     }

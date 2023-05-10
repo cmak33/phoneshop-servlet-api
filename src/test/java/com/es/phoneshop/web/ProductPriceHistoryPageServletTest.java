@@ -76,6 +76,6 @@ public class ProductPriceHistoryPageServletTest {
 
         servlet.doGet(request, response);
 
-        verify(response).setStatus(HttpServletResponse.SC_NOT_FOUND);
+        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 }

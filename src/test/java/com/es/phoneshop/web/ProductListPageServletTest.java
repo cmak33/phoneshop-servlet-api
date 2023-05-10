@@ -63,11 +63,11 @@ public class ProductListPageServletTest {
 
     @Test
     public void givenNullDescription_whenDoGet_thenSetProductsAttribute() throws ServletException, IOException {
-        when(productService.findProductsByDescription(null)).thenReturn(productList);
+        when(productService.findProducts()).thenReturn(productList);
 
         servlet.doGet(request, response);
 
-        verify(productService).findProductsByDescription(null);
+        verify(productService).findProducts();
         verify(request).setAttribute("products", productList);
         verify(requestDispatcher).forward(request, response);
     }

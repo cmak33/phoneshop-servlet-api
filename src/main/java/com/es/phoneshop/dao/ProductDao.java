@@ -12,6 +12,8 @@ public interface ProductDao {
 
     List<Product> findProducts();
 
+    List<Product> findSortedProducts(Comparator<Product> comparator);
+
     List<Product> findProductsByDescription(String description);
 
     List<Product> findProductsByDescriptionWithOrdering(String description, Comparator<Product> comparator);

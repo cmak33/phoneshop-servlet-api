@@ -110,4 +110,22 @@ public class CustomProductServiceTest {
         verify(productDao).findProductsByDescriptionWithOrdering(description, comparator);
         assertEquals(products, actualProducts);
     }
+
+    @Test
+    public void givenOrdering_whenFindSortedProducts_thenReturnSortedProducts() {
+        List<Product> products = new ArrayList<>() {{
+            add(new Product());
+        }};
+        Comparator<Product> comparator = Comparator.comparing(Product::getDescription);
+        SortOrder order = SortOrder.ASCENDING;
+        SortField field = SortField.DESCRIPTION;
+        when(productComparatorsConfiguration.getComparatorByFieldAndOrder(field, order)).thenReturn(comparator);
+        when(productDao.findSortedProducts(comparator)).thenReturn(products);
+
+        List<Product> actualProducts = customProductService.findSortedProducts(field, order);
+
+        verify(productComparatorsConfiguration).getComparatorByFieldAndOrder(field, order);
+        verify(productDao).findSortedProducts(comparator);
+        assertEquals(products, actualProducts);
+    }
 }

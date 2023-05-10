@@ -12,6 +12,8 @@ public interface ProductService {
 
     List<Product> findProducts();
 
+    List<Product> findSortedProducts(SortField sortField, SortOrder sortOrder);
+
     List<Product> findProductsByDescription(String description);
 
     List<Product> findProductsByDescriptionWithOrdering(String description, SortField sortField, SortOrder sortOrder);

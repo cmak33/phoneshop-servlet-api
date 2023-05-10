@@ -3,7 +3,6 @@ package com.es.phoneshop.dao;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDescriptionMatch;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,10 +65,14 @@ public class CustomProductDao implements ProductDao {
     }
 
     @Override
+    public List<Product> findSortedProducts(Comparator<Product> comparator) {
+        return findProducts().stream()
+                .sorted(comparator)
+                .toList();
+    }
+
+    @Override
     public List<Product> findProductsByDescription(String description) {
-        if (StringUtils.isBlank(description)) {
-            return findProducts();
-        }
         readLock.lock();
         try {
             List<String> descriptionWords = Arrays.asList(description.toLowerCase().split(" "));

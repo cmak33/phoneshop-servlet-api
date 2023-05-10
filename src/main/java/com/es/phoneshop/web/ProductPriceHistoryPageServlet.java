@@ -28,7 +28,7 @@ public class ProductPriceHistoryPageServlet extends HttpServlet {
             request.setAttribute("product", getProductWithPriceHistoryById(productToShowPriceHistoryId));
             request.getRequestDispatcher("/WEB-INF/pages/productPriceHistory.jsp").forward(request, response);
         } else {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 

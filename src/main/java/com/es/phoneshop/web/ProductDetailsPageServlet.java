@@ -29,7 +29,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
             req.setAttribute("product", product);
             req.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(req, resp);
         } else {
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 }
