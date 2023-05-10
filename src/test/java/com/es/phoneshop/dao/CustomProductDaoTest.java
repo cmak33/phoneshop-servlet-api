@@ -1,13 +1,14 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.dao;
 
-import com.es.phoneshop.dao.CustomProductDao;
 import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -136,5 +137,83 @@ public class CustomProductDaoTest {
     @Test(expected = IllegalArgumentException.class)
     public void givenNullId_whenDelete_thenThrowIllegalArgumentException() {
         productDao.delete(null);
+    }
+
+    @Test
+    public void givenValidDescription_whenFindProductsByDescription_thenReturnMatchingProducts() {
+        List<Product> expectedProducts = mockedProductsList.subList(0, 2);
+        String description = "description";
+        when(mockedProductsList.get(0).getDescription()).thenReturn(description);
+        when(mockedProductsList.get(1).getDescription()).thenReturn(description);
+        when(mockedProductsList.get(2).getDescription()).thenReturn("");
+
+        List<Product> actualProducts = productDao.findProductsByDescription(description);
+
+        assertEquals(expectedProducts, actualProducts);
+    }
+
+    @Test
+    public void givenValidDescription_whenFindProductsByDescription_thenReturnSortedMatchingProducts() {
+        List<Product> expectedProducts = new ArrayList<>() {{
+            add(mockedProductsList.get(2));
+            add(mockedProductsList.get(0));
+        }};
+        String description = "three words description";
+        when(mockedProductsList.get(0).getDescription()).thenReturn("three");
+        when(mockedProductsList.get(1).getDescription()).thenReturn("does not match");
+        when(mockedProductsList.get(2).getDescription()).thenReturn("three words");
+
+        List<Product> actualProducts = productDao.findProductsByDescription(description);
+
+        assertEquals(expectedProducts, actualProducts);
+    }
+
+    @Test
+    public void givenUppercaseDescription_whenFindProductsByDescription_thenReturnSortedMatchingProducts() {
+        List<Product> expectedProducts = new ArrayList<>() {{
+            add(mockedProductsList.get(1));
+            add(mockedProductsList.get(0));
+        }};
+        String description = "UPPERCASE DESCRIPTION";
+        when(mockedProductsList.get(0).getDescription()).thenReturn("upperCase");
+        when(mockedProductsList.get(1).getDescription()).thenReturn("uppercase Description");
+        when(mockedProductsList.get(2).getDescription()).thenReturn("DOES NOT MATCH");
+
+        List<Product> actualProducts = productDao.findProductsByDescription(description);
+
+        assertEquals(expectedProducts, actualProducts);
+    }
+
+    @Test
+    public void givenValidDescriptionAndOrdering_whenFindProductsByDescriptionWithOrdering_thenReturnSortedProducts() {
+        List<Product> expectedProducts = new ArrayList<>() {{
+            add(mockedProductsList.get(2));
+            add(mockedProductsList.get(0));
+        }};
+        String description = "three words description";
+        when(mockedProductsList.get(0).getDescription()).thenReturn("three words");
+        when(mockedProductsList.get(1).getDescription()).thenReturn("does not match");
+        when(mockedProductsList.get(2).getDescription()).thenReturn("three");
+
+        List<Product> actualProducts = productDao.findProductsByDescriptionWithOrdering(description, Comparator.comparing(Product::getPrice).reversed());
+
+        assertEquals(expectedProducts, actualProducts);
+    }
+
+    @Test
+    public void givenValidComparator_whenFindSortedProducts_thenReturnSortedProducts() {
+        List<Product> expectedProducts = new ArrayList<>() {{
+            add(mockedProductsList.get(2));
+            add(mockedProductsList.get(1));
+            add(mockedProductsList.get(0));
+        }};
+        Comparator<Product> comparator = Comparator.comparing(Product::getPrice);
+        when(mockedProductsList.get(0).getPrice()).thenReturn(BigDecimal.valueOf(100));
+        when(mockedProductsList.get(1).getPrice()).thenReturn(BigDecimal.valueOf(50));
+        when(mockedProductsList.get(2).getPrice()).thenReturn(BigDecimal.valueOf(10));
+
+        List<Product> actualProducts = productDao.findSortedProducts(comparator);
+
+        assertEquals(expectedProducts, actualProducts);
     }
 }

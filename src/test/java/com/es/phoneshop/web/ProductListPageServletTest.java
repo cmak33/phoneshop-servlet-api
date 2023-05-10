@@ -1,7 +1,7 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.service.CustomProductService;
+import com.es.phoneshop.service.ProductService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,25 +30,44 @@ public class ProductListPageServletTest {
     @Mock
     private RequestDispatcher requestDispatcher;
     @Mock
-    private CustomProductService productService;
+    private ProductService productService;
 
     private final ProductListPageServlet servlet = new ProductListPageServlet();
+    private List<Product> productList;
 
     @Before
     public void setup() {
+        productList = createProductList();
         servlet.setProductService(productService);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
-    @Test
-    public void testDoGet() throws ServletException, IOException {
-        List<Product> productList = new ArrayList<>() {{
+    private List<Product> createProductList() {
+        return new ArrayList<>() {{
             add(new Product());
         }};
+    }
+
+    @Test
+    public void givenValidDescription_whenDoGet_thenSetProductsAttribute() throws ServletException, IOException {
+        String description = "query";
+        when(request.getParameter("query")).thenReturn(description);
+        when(productService.findProductsByDescription(description)).thenReturn(productList);
+
+        servlet.doGet(request, response);
+
+        verify(productService).findProductsByDescription(description);
+        verify(request).setAttribute("products", productList);
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void givenNullDescription_whenDoGet_thenSetProductsAttribute() throws ServletException, IOException {
         when(productService.findProducts()).thenReturn(productList);
 
         servlet.doGet(request, response);
 
+        verify(productService).findProducts();
         verify(request).setAttribute("products", productList);
         verify(requestDispatcher).forward(request, response);
     }
