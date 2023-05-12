@@ -34,6 +34,11 @@
         <servlet-class>com.es.phoneshop.web.ProductSortServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>cart</servlet-name>
+        <servlet-class>com.es.phoneshop.web.CartServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>productList</servlet-name>
         <url-pattern>/products</url-pattern>
@@ -52,6 +57,11 @@
     <servlet-mapping>
         <servlet-name>productSort</servlet-name>
         <url-pattern>/products/sort</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>cart</servlet-name>
+        <url-pattern>/add-product-to-cart/*</url-pattern>
     </servlet-mapping>
 
     <error-page>

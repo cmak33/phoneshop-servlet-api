@@ -50,7 +50,7 @@ public class CustomCartService implements CartService {
             }
             int stock = productService.getProduct(productId).getStock();
             if (quantity > stock) {
-                throw new OutOfStockException(productId, quantity, stock);
+                throw new OutOfStockException(quantity, stock);
             }
             if (oldCartItem.isPresent()) {
                 oldCartItem.get().setQuantity(quantity);
