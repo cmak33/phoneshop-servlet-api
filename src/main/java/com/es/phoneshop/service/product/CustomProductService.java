@@ -1,4 +1,4 @@
-package com.es.phoneshop.service;
+package com.es.phoneshop.service.product;
 
 import com.es.phoneshop.configuration.ProductComparatorsConfiguration;
 import com.es.phoneshop.dao.CustomProductDao;

@@ -6,6 +6,7 @@ import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.sorting.SortField;
 import com.es.phoneshop.model.product.sorting.SortOrder;
+import com.es.phoneshop.service.product.CustomProductService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
