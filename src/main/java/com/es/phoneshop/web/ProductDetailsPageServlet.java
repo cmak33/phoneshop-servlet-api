@@ -1,8 +1,11 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.attributesHolder.HttpSessionAttributesHolder;
 import com.es.phoneshop.service.product.CustomProductService;
 import com.es.phoneshop.service.product.ProductService;
+import com.es.phoneshop.service.product.recentlyViewedProducts.CustomRecentlyViewedProductService;
+import com.es.phoneshop.service.product.recentlyViewedProducts.RecentlyViewedProductService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -14,22 +17,30 @@ import java.io.IOException;
 public class ProductDetailsPageServlet extends HttpServlet {
 
     private ProductService productService;
+    private RecentlyViewedProductService recentlyViewedProductService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productService = CustomProductService.getInstance();
+        recentlyViewedProductService = CustomRecentlyViewedProductService.getInstance();
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getPathInfo() != null && req.getPathInfo().length() > 1) {
-            long id = Long.parseLong(req.getPathInfo().substring(1));
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (request.getPathInfo() != null && request.getPathInfo().length() > 1) {
+            long id = Long.parseLong(request.getPathInfo().substring(1));
             Product product = productService.getProduct(id);
-            req.setAttribute("product", product);
-            req.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(req, resp);
+            addProductToRecentlyViewed(request, id);
+            request.setAttribute("product", product);
+            request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
         } else {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
+    }
+
+    private void addProductToRecentlyViewed(HttpServletRequest request, long id) {
+        HttpSessionAttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
+        recentlyViewedProductService.addRecentlyViewedProduct(attributesHolder, id);
     }
 }

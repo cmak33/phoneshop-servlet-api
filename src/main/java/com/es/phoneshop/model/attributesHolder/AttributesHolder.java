@@ -1,4 +1,4 @@
-package com.es.phoneshop.service.cart;
+package com.es.phoneshop.model.attributesHolder;
 
 public interface AttributesHolder {
 

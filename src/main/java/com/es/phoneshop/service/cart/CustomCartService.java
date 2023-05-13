@@ -1,6 +1,7 @@
 package com.es.phoneshop.service.cart;
 
 import com.es.phoneshop.exception.OutOfStockException;
+import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.service.product.CustomProductService;
@@ -42,21 +43,29 @@ public class CustomCartService implements CartService {
     @Override
     public void addItem(Cart cart, Long productId, int quantity) throws OutOfStockException {
         synchronized (cart) {
-            Optional<CartItem> oldCartItem = cart.getCartItems().stream()
-                    .filter(item -> item.getProductId().equals(productId))
-                    .findFirst();
+            Optional<CartItem> oldCartItem = findCartItemById(cart, productId);
             if (oldCartItem.isPresent()) {
                 quantity += oldCartItem.get().getQuantity();
             }
-            int stock = productService.getProduct(productId).getStock();
-            if (quantity > stock) {
-                throw new OutOfStockException(quantity, stock);
-            }
+            checkIfQuantityIsInStockBounds(productId, quantity);
             if (oldCartItem.isPresent()) {
                 oldCartItem.get().setQuantity(quantity);
             } else {
                 cart.addItem(new CartItem(productId, quantity));
             }
+        }
+    }
+
+    private Optional<CartItem> findCartItemById(Cart cart, Long productId) {
+        return cart.getCartItems().stream()
+                .filter(item -> item.getProductId().equals(productId))
+                .findFirst();
+    }
+
+    private void checkIfQuantityIsInStockBounds(Long productId, int quantity) throws OutOfStockException {
+        int stock = productService.getProduct(productId).getStock();
+        if (quantity > stock) {
+            throw new OutOfStockException(quantity, stock);
         }
     }
 }

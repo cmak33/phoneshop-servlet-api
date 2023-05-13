@@ -3,6 +3,7 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.product.ProductService;
+import com.es.phoneshop.service.product.recentlyViewedProducts.RecentlyViewedProductService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +32,8 @@ public class ProductDetailsPageServletTest {
     private RequestDispatcher requestDispatcher;
     @Mock
     private ProductService productService;
+    @Mock
+    private RecentlyViewedProductService recentlyViewedProductService;
     @InjectMocks
     private final ProductDetailsPageServlet productDetailsPageServlet = new ProductDetailsPageServlet();
 
