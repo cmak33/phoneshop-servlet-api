@@ -13,7 +13,7 @@ public class CustomCartService implements CartService {
 
     private static final String CART_ATTRIBUTE_NAME = String.format("%s.cart", CustomCartService.class.getName());
     private static volatile CustomCartService instance;
-    private final ProductService productService;
+    private ProductService productService;
 
     private CustomCartService() {
         productService = CustomProductService.getInstance();

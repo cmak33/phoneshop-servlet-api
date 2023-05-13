@@ -17,7 +17,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -72,5 +74,16 @@ public class ProductDetailsPageServletTest {
         productDetailsPageServlet.doGet(request, response);
 
         verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void givenValidPathInfo_whenDoGet_thenAddProductToRecentlyViewed() throws ServletException, IOException {
+        long id = 1L;
+        when(request.getPathInfo()).thenReturn(String.format("/%d", id));
+
+        productDetailsPageServlet.doGet(request, response);
+
+        verify(recentlyViewedProductService).addRecentlyViewedProduct(any(), eq(id));
+        verify(requestDispatcher).forward(request, response);
     }
 }
