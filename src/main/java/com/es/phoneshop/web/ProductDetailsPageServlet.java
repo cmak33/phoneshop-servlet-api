@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ProductDetailsPageServlet extends HttpServlet {
 
@@ -33,6 +34,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
             Product product = productService.getProduct(id);
             addProductToRecentlyViewed(request, id);
             request.setAttribute("product", product);
+            request.setAttribute("recentlyViewedProducts", receiveRecentlyViewedProducts(request));
             request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -42,5 +44,10 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private void addProductToRecentlyViewed(HttpServletRequest request, long id) {
         HttpSessionAttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
         recentlyViewedProductService.addRecentlyViewedProduct(attributesHolder, id);
+    }
+
+    private List<Product> receiveRecentlyViewedProducts(HttpServletRequest request) {
+        HttpSessionAttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
+        return recentlyViewedProductService.getRecentlyViewedProducts(attributesHolder);
     }
 }

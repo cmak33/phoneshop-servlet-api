@@ -5,7 +5,6 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="products" type="java.util.List" scope="request"/>
-<jsp:useBean id="recentlyViewedProducts" type="java.util.List" scope="request"/>
 
 <%
     String json = new ObjectMapper().writeValueAsString(products);
@@ -63,22 +62,4 @@
         </c:forEach>
         </tbody>
     </table>
-    <c:if test="${not empty recentlyViewedProducts}">
-        <h2>Recently viewed products</h2>
-        <table>
-            <c:forEach var="product" items="${recentlyViewedProducts}">
-                <tr>
-                    <td class="viewed-product">
-                        <img class="product-tile" src="${product.imageUrl}" alt="no image">
-                        <p>
-                            <a href="${pageContext.servletContext.contextPath}/products/${product.getId()}">${product.description}</a>
-                        </p>
-                        <fmt:formatNumber
-                                value="${product.price}"
-                                type="currency" currencySymbol="${product.currency.symbol}"/>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
-    </c:if>
 </tags:master>

@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -84,6 +85,19 @@ public class ProductDetailsPageServletTest {
         productDetailsPageServlet.doGet(request, response);
 
         verify(recentlyViewedProductService).addRecentlyViewedProduct(any(), eq(id));
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void givenValidPathInfo_whenDoGet_thenSetRecentlyViewedProductsToAttribute() throws ServletException, IOException {
+        long id = 1L;
+        when(request.getPathInfo()).thenReturn(String.format("/%d", id));
+        List<Product> productList = List.of(new Product());
+        when(recentlyViewedProductService.getRecentlyViewedProducts(any())).thenReturn(productList);
+
+        productDetailsPageServlet.doGet(request, response);
+
+        verify(request).setAttribute("recentlyViewedProducts", productList);
         verify(requestDispatcher).forward(request, response);
     }
 }

@@ -2,7 +2,6 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.product.ProductService;
-import com.es.phoneshop.service.product.recentlyViewedProducts.RecentlyViewedProductService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,8 +32,6 @@ public class ProductListPageServletTest {
     private RequestDispatcher requestDispatcher;
     @Mock
     private ProductService productService;
-    @Mock
-    private RecentlyViewedProductService recentlyViewedProductService;
     @InjectMocks
     private final ProductListPageServlet servlet = new ProductListPageServlet();
     private List<Product> productList;
@@ -73,17 +69,6 @@ public class ProductListPageServletTest {
 
         verify(productService).findProducts();
         verify(request).setAttribute("products", productList);
-        verify(requestDispatcher).forward(request, response);
-    }
-
-    @Test
-    public void givenNullDescription_whenDoGet_thenSetRecentlyViewedProductsToAttributes() throws ServletException, IOException {
-        List<Product> productList = List.of(new Product());
-        when(recentlyViewedProductService.getRecentlyViewedProducts(any())).thenReturn(productList);
-
-        servlet.doGet(request, response);
-
-        verify(request).setAttribute("recentlyViewedProducts", productList);
         verify(requestDispatcher).forward(request, response);
     }
 }
