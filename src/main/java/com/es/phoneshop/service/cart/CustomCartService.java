@@ -41,8 +41,9 @@ public class CustomCartService implements CartService {
     }
 
     @Override
-    public void addItem(Cart cart, Long productId, int quantity) throws OutOfStockException {
-        synchronized (cart) {
+    public void addItem(AttributesHolder attributesHolder, Long productId, int quantity) throws OutOfStockException {
+        Cart cart = getCart(attributesHolder);
+        synchronized (attributesHolder.getSynchronizationObject()) {
             Optional<CartItem> oldCartItem = findCartItemById(cart, productId);
             if (oldCartItem.isPresent()) {
                 quantity += oldCartItem.get().getQuantity();

@@ -12,6 +12,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -72,7 +74,7 @@ public class CartServletTest {
         OutOfStockException outOfStockException = new OutOfStockException(quantity, stock);
         when(request.getParameter("quantity")).thenReturn(String.valueOf(quantity));
         when(request.getPathInfo()).thenReturn(String.format("/%d", id));
-        doThrow(outOfStockException).when(cartService).addItem(null, id, quantity);
+        doThrow(outOfStockException).when(cartService).addItem(any(), eq(id), eq(quantity));
         String expectedRedirect = createErrorRedirectUrl(request, id, outOfStockException.getMessage());
 
         cartServlet.doPost(request, response);
@@ -90,7 +92,7 @@ public class CartServletTest {
 
         cartServlet.doPost(request, response);
 
-        verify(cartService).addItem(null, id, quantity);
+        verify(cartService).addItem(any(), eq(id), eq(quantity));
         verify(response).sendRedirect(expectedRedirect);
     }
 

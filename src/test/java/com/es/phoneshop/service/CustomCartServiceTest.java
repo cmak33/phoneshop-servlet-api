@@ -81,8 +81,10 @@ public class CustomCartServiceTest {
                 .setStock(stock)
                 .build();
         when(productService.getProduct(cartItem.getProductId())).thenReturn(product);
+        when(attributesHolder.getAttribute(any())).thenReturn(cart);
+        when(attributesHolder.getSynchronizationObject()).thenReturn(new Object());
 
-        cartService.addItem(cart, cartItem.getProductId(), quantity);
+        cartService.addItem(attributesHolder, cartItem.getProductId(), quantity);
 
         verify(cartItem).setQuantity(expectedQuantity);
     }
@@ -95,8 +97,9 @@ public class CustomCartServiceTest {
                 .setStock(stock)
                 .build();
         when(productService.getProduct(cartItem.getProductId())).thenReturn(product);
+        when(attributesHolder.getSynchronizationObject()).thenReturn(new Object());
 
-        cartService.addItem(cart, cartItem.getProductId(), quantity);
+        cartService.addItem(attributesHolder, cartItem.getProductId(), quantity);
     }
 
     @Test
@@ -109,8 +112,10 @@ public class CustomCartServiceTest {
                 .setStock(stock)
                 .build();
         when(productService.getProduct(id)).thenReturn(product);
+        when(attributesHolder.getSynchronizationObject()).thenReturn(new Object());
+        when(attributesHolder.getAttribute(any())).thenReturn(cart);
 
-        cartService.addItem(cart, id, quantity);
+        cartService.addItem(attributesHolder, id, quantity);
 
         verify(cart).addItem(expectedItem);
     }

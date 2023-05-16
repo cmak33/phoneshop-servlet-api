@@ -21,4 +21,9 @@ public class HttpSessionAttributesHolder implements AttributesHolder {
             httpSession.setAttribute(name, obj);
         }
     }
+
+    @Override
+    public Object getSynchronizationObject() {
+        return httpSession;
+    }
 }

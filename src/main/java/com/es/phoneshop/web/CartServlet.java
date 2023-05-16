@@ -1,10 +1,9 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.exception.OutOfStockException;
-import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.model.attributesHolder.HttpSessionAttributesHolder;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.CustomCartService;
-import com.es.phoneshop.model.attributesHolder.HttpSessionAttributesHolder;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -12,6 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 public class CartServlet extends HttpServlet {
 
@@ -29,8 +31,8 @@ public class CartServlet extends HttpServlet {
             long id = Long.parseLong(request.getPathInfo().substring(1));
             int quantity;
             try {
-                quantity = Integer.parseInt(request.getParameter("quantity"));
-            } catch (NumberFormatException numberFormatException) {
+                quantity = parseQuantity(request.getParameter("quantity"));
+            } catch (ParseException parseException) {
                 response.sendRedirect(createErrorRedirectUrl(request, id, "Quantity was not a number"));
                 return;
             }
@@ -50,10 +52,14 @@ public class CartServlet extends HttpServlet {
         }
     }
 
+    private int parseQuantity(String quantity) throws ParseException {
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
+        return numberFormat.parse(quantity).intValue();
+    }
+
     private void addItemToCart(HttpServletRequest request, Long id, int quantity) throws OutOfStockException {
         HttpSessionAttributesHolder httpSessionAttributesHolder = new HttpSessionAttributesHolder(request.getSession());
-        Cart cart = cartService.getCart(httpSessionAttributesHolder);
-        cartService.addItem(cart, id, quantity);
+        cartService.addItem(httpSessionAttributesHolder, id, quantity);
     }
 
     private String createErrorRedirectUrl(HttpServletRequest request, Long productId, String message) {
