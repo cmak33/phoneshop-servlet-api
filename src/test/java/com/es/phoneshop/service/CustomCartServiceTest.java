@@ -9,7 +9,6 @@ import com.es.phoneshop.service.cart.CustomCartService;
 import com.es.phoneshop.service.product.ProductService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -19,6 +18,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -48,18 +48,6 @@ public class CustomCartServiceTest {
             add(cartItem);
         }};
         when(cart.getCartItems()).thenReturn(items);
-    }
-
-
-    @Test
-    public void givenCartAttributeIsNotSet_whenGetCart_thenCreateNewCart() {
-        when(attributesHolder.getAttribute(any())).thenReturn(null);
-        ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
-
-        Cart cart = cartService.getCart(attributesHolder);
-
-        verify(attributesHolder).getAttribute(stringArgumentCaptor.capture());
-        verify(attributesHolder).setAttribute(stringArgumentCaptor.getValue(), cart);
     }
 
     @Test
@@ -97,6 +85,7 @@ public class CustomCartServiceTest {
                 .setStock(stock)
                 .build();
         when(productService.getProduct(cartItem.getProductId())).thenReturn(product);
+        when(attributesHolder.getAttribute(any())).thenReturn(cart);
         when(attributesHolder.getSynchronizationObject()).thenReturn(new Object());
 
         cartService.addItem(attributesHolder, cartItem.getProductId(), quantity);
@@ -118,5 +107,12 @@ public class CustomCartServiceTest {
         cartService.addItem(attributesHolder, id, quantity);
 
         verify(cart).addItem(expectedItem);
+    }
+
+    @Test
+    public void givenCartObject_whenSetCart_thenSetCartToSessionAttribute() {
+        cartService.setCart(attributesHolder, cart);
+
+        verify(attributesHolder).setAttribute(any(), eq(cart));
     }
 }

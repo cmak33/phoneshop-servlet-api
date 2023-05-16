@@ -8,5 +8,7 @@ public interface CartService {
 
     Cart getCart(AttributesHolder attributesHolder);
 
+    void setCart(AttributesHolder attributesHolder, Cart cart);
+
     void addItem(AttributesHolder attributesHolder, Long productId, int quantity) throws OutOfStockException;
 }

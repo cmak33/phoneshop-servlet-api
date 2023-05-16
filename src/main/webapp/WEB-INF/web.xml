@@ -10,33 +10,52 @@
         <param-value>true</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>initializeCart</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>initializeViewedProducts</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
     <listener>
-        <listener-class>com.es.phoneshop.web.ProductDemoDataServletContextListener</listener-class>
+        <listener-class>com.es.phoneshop.web.listeners.ProductDemoDataServletContextListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>com.es.phoneshop.web.listeners.CartInitializationSessionListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>com.es.phoneshop.web.listeners.RecentlyViewedProductsInitializationSessionListener
+        </listener-class>
     </listener>
 
     <servlet>
         <servlet-name>productList</servlet-name>
-        <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
+        <servlet-class>com.es.phoneshop.web.servlets.ProductListPageServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>productDetails</servlet-name>
-        <servlet-class>com.es.phoneshop.web.ProductDetailsPageServlet</servlet-class>
+        <servlet-class>com.es.phoneshop.web.servlets.ProductDetailsPageServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>productPriceHistory</servlet-name>
-        <servlet-class>com.es.phoneshop.web.ProductPriceHistoryPageServlet</servlet-class>
+        <servlet-class>com.es.phoneshop.web.servlets.ProductPriceHistoryPageServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>productSort</servlet-name>
-        <servlet-class>com.es.phoneshop.web.ProductSortServlet</servlet-class>
+        <servlet-class>com.es.phoneshop.web.servlets.ProductSortServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>cart</servlet-name>
-        <servlet-class>com.es.phoneshop.web.CartServlet</servlet-class>
+        <servlet-class>com.es.phoneshop.web.servlets.CartServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

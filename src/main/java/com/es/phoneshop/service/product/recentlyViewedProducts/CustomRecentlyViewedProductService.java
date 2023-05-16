@@ -1,11 +1,10 @@
 package com.es.phoneshop.service.product.recentlyViewedProducts;
 
-import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.attributesHolder.AttributesHolder;
+import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.product.CustomProductService;
 import com.es.phoneshop.service.product.ProductService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomRecentlyViewedProductService implements RecentlyViewedProductService {
@@ -39,6 +38,11 @@ public class CustomRecentlyViewedProductService implements RecentlyViewedProduct
     }
 
     @Override
+    public void setRecentlyViewedProducts(AttributesHolder attributesHolder, List<Long> recentlyViewedProducts) {
+        attributesHolder.setAttribute(VIEWED_PRODUCTS_ATTRIBUTE_NAME, recentlyViewedProducts);
+    }
+
+    @Override
     public void addRecentlyViewedProduct(AttributesHolder attributesHolder, Long productId) {
         List<Long> productsId = getCurrentlyViewedProductsId(attributesHolder);
         synchronized (productsId) {
@@ -52,12 +56,7 @@ public class CustomRecentlyViewedProductService implements RecentlyViewedProduct
     }
 
     private List<Long> getCurrentlyViewedProductsId(AttributesHolder attributesHolder) {
-        List<Long> productsId = (List<Long>) attributesHolder.getAttribute(VIEWED_PRODUCTS_ATTRIBUTE_NAME);
-        if (productsId == null) {
-            productsId = new ArrayList<>();
-            attributesHolder.setAttribute(VIEWED_PRODUCTS_ATTRIBUTE_NAME, productsId);
-        }
-        return productsId;
+        return (List<Long>) attributesHolder.getAttribute(VIEWED_PRODUCTS_ATTRIBUTE_NAME);
     }
 
     public static int getMaxViewedProductsCount() {

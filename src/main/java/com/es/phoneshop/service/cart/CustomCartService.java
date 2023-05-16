@@ -32,12 +32,12 @@ public class CustomCartService implements CartService {
 
     @Override
     public Cart getCart(AttributesHolder attributesHolder) {
-        Cart cart = (Cart) attributesHolder.getAttribute(CART_ATTRIBUTE_NAME);
-        if (cart == null) {
-            cart = new Cart();
-            attributesHolder.setAttribute(CART_ATTRIBUTE_NAME, cart);
-        }
-        return cart;
+        return (Cart) attributesHolder.getAttribute(CART_ATTRIBUTE_NAME);
+    }
+
+    @Override
+    public void setCart(AttributesHolder attributesHolder, Cart cart) {
+        attributesHolder.setAttribute(CART_ATTRIBUTE_NAME, cart);
     }
 
     @Override

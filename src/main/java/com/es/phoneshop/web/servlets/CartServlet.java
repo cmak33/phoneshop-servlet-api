@@ -1,4 +1,4 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.servlets;
 
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.attributesHolder.HttpSessionAttributesHolder;
@@ -31,7 +31,7 @@ public class CartServlet extends HttpServlet {
             long id = Long.parseLong(request.getPathInfo().substring(1));
             int quantity;
             try {
-                quantity = parseQuantity(request.getParameter("quantity"));
+                quantity = parseQuantity(request.getLocale(), request.getParameter("quantity"));
             } catch (ParseException parseException) {
                 response.sendRedirect(createErrorRedirectUrl(request, id, "Quantity was not a number"));
                 return;
@@ -52,8 +52,8 @@ public class CartServlet extends HttpServlet {
         }
     }
 
-    private int parseQuantity(String quantity) throws ParseException {
-        NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
+    private int parseQuantity(Locale locale, String quantity) throws ParseException {
+        NumberFormat numberFormat = NumberFormat.getInstance(locale);
         return numberFormat.parse(quantity).intValue();
     }
 

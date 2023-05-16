@@ -9,5 +9,7 @@ public interface RecentlyViewedProductService {
 
     List<Product> getRecentlyViewedProducts(AttributesHolder attributesHolder);
 
+    void setRecentlyViewedProducts(AttributesHolder attributesHolder, List<Long> recentlyViewedProducts);
+
     void addRecentlyViewedProduct(AttributesHolder attributesHolder, Long productId);
 }

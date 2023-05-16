@@ -1,9 +1,10 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.servlets;
 
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.service.cart.CartService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,6 +31,11 @@ public class CartServletTest {
     private CartService cartService;
     @InjectMocks
     private final CartServlet cartServlet = new CartServlet();
+
+    @Before
+    public void setup() {
+        when(request.getLocale()).thenReturn(Locale.ENGLISH);
+    }
 
     @Test
     public void givenInvalidPathInfo_whenDoPost_thenSend404Error() throws IOException {

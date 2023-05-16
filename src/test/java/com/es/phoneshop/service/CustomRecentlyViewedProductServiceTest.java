@@ -16,6 +16,8 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CustomRecentlyViewedProductServiceTest {
@@ -26,7 +28,6 @@ public class CustomRecentlyViewedProductServiceTest {
     private AttributesHolder attributesHolder;
     @InjectMocks
     private final CustomRecentlyViewedProductService recentlyViewedProductService = CustomRecentlyViewedProductService.getInstance();
-
 
     @Before
     public void setup() {
@@ -111,4 +112,14 @@ public class CustomRecentlyViewedProductServiceTest {
                 .toList();
         return new ArrayList<>(immutableList);
     }
+
+    @Test
+    public void givenIdList_whenSetRecentlyViewedProducts_thenSetListToSessionAttribute() {
+        List<Long> idList = List.of(1L, 2L, 3L);
+
+        recentlyViewedProductService.setRecentlyViewedProducts(attributesHolder, idList);
+
+        verify(attributesHolder).setAttribute(any(), eq(idList));
+    }
+
 }

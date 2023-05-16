@@ -1,4 +1,4 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.servlets;
 
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.product.CustomProductService;
@@ -8,10 +8,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.List;
 
-public class ProductPriceHistoryPageServlet extends HttpServlet {
+public class ProductListPageServlet extends HttpServlet {
 
     private ProductService productService;
 
@@ -23,17 +25,20 @@ public class ProductPriceHistoryPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getPathInfo() != null && request.getPathInfo().length() > 1) {
-            String productToShowPriceHistoryId = request.getPathInfo().substring(1);
-            request.setAttribute("product", getProductWithPriceHistoryById(productToShowPriceHistoryId));
-            request.getRequestDispatcher("/WEB-INF/pages/productPriceHistory.jsp").forward(request, response);
+        String description = request.getParameter("query");
+        request.setAttribute("products", receiveProducts(description));
+        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
+    }
+
+    private List<Product> receiveProducts(String description) {
+        if (StringUtils.isBlank(description)) {
+            return productService.findProducts();
         } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return productService.findProductsByDescription(description);
         }
     }
 
-    private Product getProductWithPriceHistoryById(String productToShowPriceHistoryId) {
-        long id = Long.parseLong(productToShowPriceHistoryId);
-        return productService.getProduct(id);
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
     }
 }
