@@ -1,4 +1,4 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.listeners;
 
 import com.es.phoneshop.dao.CustomProductDao;
 import com.es.phoneshop.dao.ProductDao;

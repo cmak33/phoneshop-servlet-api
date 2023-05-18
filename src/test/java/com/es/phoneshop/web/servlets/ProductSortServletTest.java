@@ -1,9 +1,9 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.servlets;
 
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.sorting.SortField;
 import com.es.phoneshop.model.product.sorting.SortOrder;
-import com.es.phoneshop.service.ProductService;
+import com.es.phoneshop.service.product.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

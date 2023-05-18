@@ -1,7 +1,7 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.servlets;
 
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.service.ProductService;
+import com.es.phoneshop.service.product.ProductService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -31,14 +32,13 @@ public class ProductListPageServletTest {
     private RequestDispatcher requestDispatcher;
     @Mock
     private ProductService productService;
-
+    @InjectMocks
     private final ProductListPageServlet servlet = new ProductListPageServlet();
     private List<Product> productList;
 
     @Before
     public void setup() {
         productList = createProductList();
-        servlet.setProductService(productService);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
