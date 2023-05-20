@@ -1,6 +1,7 @@
 package com.es.phoneshop.service.cart;
 
 import com.es.phoneshop.exception.OutOfStockException;
+import com.es.phoneshop.exception.ProductNotInCartException;
 import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartProduct;
@@ -14,6 +15,8 @@ public interface CartService {
     List<CartProduct> getCartProducts(AttributesHolder attributesHolder);
 
     void updateItem(AttributesHolder attributesHolder, Long id, int newQuantity) throws OutOfStockException;
+
+    void deleteItem(AttributesHolder attributesHolder, Long id) throws ProductNotInCartException;
 
     void setCart(AttributesHolder attributesHolder, Cart cart);
 

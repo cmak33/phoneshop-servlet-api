@@ -1,6 +1,7 @@
 package com.es.phoneshop.service.cart;
 
 import com.es.phoneshop.exception.OutOfStockException;
+import com.es.phoneshop.exception.ProductNotInCartException;
 import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
@@ -51,6 +52,18 @@ public class CustomCartService implements CartService {
         if (item.isPresent()) {
             checkIfQuantityIsInStockBounds(id, newQuantity);
             item.get().setQuantity(newQuantity);
+        }
+    }
+
+    @Override
+    public void deleteItem(AttributesHolder attributesHolder, Long id) throws ProductNotInCartException {
+        boolean wasRemoved;
+        synchronized (attributesHolder.getSynchronizationObject()) {
+            wasRemoved = getCart(attributesHolder).getCartItems()
+                    .removeIf(product -> product.getProductId().equals(id));
+        }
+        if (!wasRemoved) {
+            throw new ProductNotInCartException(id);
         }
     }
 

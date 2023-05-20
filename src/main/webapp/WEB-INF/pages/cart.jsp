@@ -26,6 +26,9 @@
                 <td class="price">
                     Price
                 </td>
+                <td>
+                    Delete item
+                </td>
             </tr>
             </thead>
             <tbody>
@@ -50,6 +53,12 @@
                                 value="${item.product().price}"
                                 type="currency" currencySymbol="${item.product().currency.symbol}"/></a>
                     </td>
+                    <td>
+                        <button form="deleteItem"
+                                formaction="${pageContext.servletContext.contextPath}/cart/delete-item/${item.product().id}">
+                            delete
+                        </button>
+                    </td>
                 </tr>
             </c:forEach>
             </tbody>
@@ -57,5 +66,7 @@
         <p>
             <input type="submit" value="update">
         </p>
+    </form>
+    <form method="post" id="deleteItem">
     </form>
 </tags:master>
