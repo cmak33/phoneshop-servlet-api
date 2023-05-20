@@ -13,6 +13,8 @@ public interface CartService {
 
     List<CartProduct> getCartProducts(AttributesHolder attributesHolder);
 
+    void updateItem(AttributesHolder attributesHolder, Long id, int newQuantity) throws OutOfStockException;
+
     void setCart(AttributesHolder attributesHolder, Cart cart);
 
     void addItem(AttributesHolder attributesHolder, Long productId, int quantity) throws OutOfStockException;

@@ -46,6 +46,15 @@ public class CustomCartService implements CartService {
     }
 
     @Override
+    public void updateItem(AttributesHolder attributesHolder, Long id, int newQuantity) throws OutOfStockException {
+        Optional<CartItem> item = findCartItemById(getCart(attributesHolder), id);
+        if (item.isPresent()) {
+            checkIfQuantityIsInStockBounds(id, newQuantity);
+            item.get().setQuantity(newQuantity);
+        }
+    }
+
+    @Override
     public void setCart(AttributesHolder attributesHolder, Cart cart) {
         attributesHolder.setAttribute(CART_ATTRIBUTE_NAME, cart);
     }
