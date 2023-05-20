@@ -4,9 +4,11 @@ import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
+import com.es.phoneshop.model.cart.CartProduct;
 import com.es.phoneshop.service.product.CustomProductService;
 import com.es.phoneshop.service.product.ProductService;
 
+import java.util.List;
 import java.util.Optional;
 
 public class CustomCartService implements CartService {
@@ -33,6 +35,14 @@ public class CustomCartService implements CartService {
     @Override
     public Cart getCart(AttributesHolder attributesHolder) {
         return (Cart) attributesHolder.getAttribute(CART_ATTRIBUTE_NAME);
+    }
+
+    @Override
+    public List<CartProduct> getCartProducts(AttributesHolder attributesHolder) {
+        return getCart(attributesHolder).getCartItems()
+                .stream()
+                .map(item -> new CartProduct(productService.getProduct(item.getProductId()), item.getQuantity()))
+                .toList();
     }
 
     @Override

@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CartServletTest {
+public class CartAddItemServletTest {
 
     @Mock
     private HttpServletRequest request;
@@ -30,7 +30,7 @@ public class CartServletTest {
     @Mock
     private CartService cartService;
     @InjectMocks
-    private final CartServlet cartServlet = new CartServlet();
+    private final CartAddItemServlet cartServlet = new CartAddItemServlet();
 
     @Before
     public void setup() {
