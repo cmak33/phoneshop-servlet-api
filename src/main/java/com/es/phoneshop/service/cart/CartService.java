@@ -14,7 +14,7 @@ public interface CartService {
 
     List<CartProduct> getCartProducts(AttributesHolder attributesHolder);
 
-    void updateItem(AttributesHolder attributesHolder, Long id, int newQuantity) throws OutOfStockException;
+    void updateItem(AttributesHolder attributesHolder, Long id, int newQuantity) throws OutOfStockException, ProductNotInCartException;
 
     void deleteItem(AttributesHolder attributesHolder, Long id) throws ProductNotInCartException;
 

@@ -42,10 +42,11 @@ public class CartServlet extends HttpServlet {
         Map<Long, String> productErrors = new HashMap<>();
         String[] productsId = request.getParameterValues("productId");
         String[] quantities = request.getParameterValues("quantity");
+        AttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
         for (int i = 0; i < productsId.length; i++) {
             Long id = Long.valueOf(productsId[i]);
             try {
-                updateProduct(request, id, quantities[i]);
+                updateProduct(attributesHolder, id, quantities[i]);
             } catch (CustomParseException | OutOfStockException exception) {
                 productErrors.put(id, exception.getMessage());
             }
@@ -58,9 +59,8 @@ public class CartServlet extends HttpServlet {
         }
     }
 
-    private void updateProduct(HttpServletRequest request, Long id, String quantityStr) throws CustomParseException, OutOfStockException {
+    private void updateProduct(AttributesHolder attributesHolder, Long id, String quantityStr) throws CustomParseException, OutOfStockException {
         int quantity = quantityParser.parse(quantityStr);
-        AttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
         cartService.updateItem(attributesHolder, id, quantity);
     }
 

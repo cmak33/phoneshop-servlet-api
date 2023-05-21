@@ -1,7 +1,9 @@
 package com.es.phoneshop.web.servlets;
 
+import com.es.phoneshop.exception.CustomParseException;
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.attributesHolder.HttpSessionAttributesHolder;
+import com.es.phoneshop.model.parser.QuantityParser;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.CustomCartService;
 import jakarta.servlet.ServletConfig;
@@ -11,18 +13,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
 
 public class CartAddItemServlet extends HttpServlet {
 
     private CartService cartService;
+    private QuantityParser quantityParser;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         cartService = CustomCartService.getInstance();
+        quantityParser = new QuantityParser();
     }
 
     @Override
@@ -31,15 +32,12 @@ public class CartAddItemServlet extends HttpServlet {
             long id = Long.parseLong(request.getPathInfo().substring(1));
             String redirectionUrl = request.getParameter("redirectionPath");
             redirectionUrl += createSeparatorCharacter(redirectionUrl);
+            quantityParser.setLocale(request.getLocale());
             int quantity;
             try {
-                quantity = parseQuantity(request.getLocale(), request.getParameter("quantity"));
-            } catch (ParseException parseException) {
-                response.sendRedirect(createErrorRedirectUrl(redirectionUrl, id, "Quantity was not a number"));
-                return;
-            }
-            if (quantity <= 0) {
-                response.sendRedirect(createErrorRedirectUrl(redirectionUrl, id, "Quantity should be bigger than zero"));
+                quantity = quantityParser.parse(request.getParameter("quantity"));
+            } catch (CustomParseException parseException) {
+                response.sendRedirect(createErrorRedirectUrl(redirectionUrl, id, parseException.getMessage()));
                 return;
             }
             try {
@@ -52,11 +50,6 @@ public class CartAddItemServlet extends HttpServlet {
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
-    }
-
-    private int parseQuantity(Locale locale, String quantity) throws ParseException {
-        NumberFormat numberFormat = NumberFormat.getInstance(locale);
-        return numberFormat.parse(quantity).intValue();
     }
 
     private void addItemToCart(HttpServletRequest request, Long id, int quantity) throws OutOfStockException {
