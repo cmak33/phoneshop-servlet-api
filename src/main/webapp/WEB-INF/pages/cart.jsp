@@ -69,4 +69,5 @@
     </form>
     <form method="post" id="deleteItem">
     </form>
+    <a href="${pageContext.servletContext.contextPath}/products">Back to product list</a>
 </tags:master>

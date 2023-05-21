@@ -70,6 +70,8 @@ public class CustomCartService implements CartService {
         }
         if (!wasRemoved) {
             throw new ProductNotInCartException(id);
+        } else {
+            recalculateCartData(getCart(attributesHolder));
         }
     }
 

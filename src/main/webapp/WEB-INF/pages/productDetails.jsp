@@ -58,6 +58,8 @@
     <form method="POST" action="${pageContext.servletContext.contextPath}/add-product-to-cart/${product.id}">
         <label for="quantity">quantity</label>
         <input id="quantity" type="number" value="${not empty param.quantity ? param.quantity : 1}" name="quantity">
+        <input type="hidden" name="redirectionPath"
+               value="${pageContext.servletContext.contextPath}/products/${product.id}">
         <input type="submit" value="Add to cart">
     </form>
     <c:if test="${not empty recentlyViewedProducts}">
@@ -79,4 +81,5 @@
         </table>
     </c:if>
     <a href="${pageContext.servletContext.contextPath}/products">Back to product list</a>
+    <a href="${pageContext.servletContext.contextPath}/cart">cart</a>
 </tags:master>

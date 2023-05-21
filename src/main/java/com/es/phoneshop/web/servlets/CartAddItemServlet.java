@@ -29,24 +29,26 @@ public class CartAddItemServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getPathInfo() != null && request.getPathInfo().length() > 1) {
             long id = Long.parseLong(request.getPathInfo().substring(1));
+            String redirectionUrl = request.getParameter("redirectionPath");
+            redirectionUrl += createSeparatorCharacter(redirectionUrl);
             int quantity;
             try {
                 quantity = parseQuantity(request.getLocale(), request.getParameter("quantity"));
             } catch (ParseException parseException) {
-                response.sendRedirect(createErrorRedirectUrl(request, id, "Quantity was not a number"));
+                response.sendRedirect(createErrorRedirectUrl(redirectionUrl, id, "Quantity was not a number"));
                 return;
             }
             if (quantity <= 0) {
-                response.sendRedirect(createErrorRedirectUrl(request, id, "Quantity should be bigger than zero"));
+                response.sendRedirect(createErrorRedirectUrl(redirectionUrl, id, "Quantity should be bigger than zero"));
                 return;
             }
             try {
                 addItemToCart(request, id, quantity);
             } catch (OutOfStockException exception) {
-                response.sendRedirect(createErrorRedirectUrl(request, id, exception.getMessage()));
+                response.sendRedirect(createErrorRedirectUrl(redirectionUrl, id, exception.getMessage()));
                 return;
             }
-            response.sendRedirect(createSuccessRedirectUrl(request, id, quantity));
+            response.sendRedirect(createSuccessRedirectUrl(redirectionUrl, id, quantity));
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -62,12 +64,18 @@ public class CartAddItemServlet extends HttpServlet {
         cartService.addItem(httpSessionAttributesHolder, id, quantity);
     }
 
-    private String createErrorRedirectUrl(HttpServletRequest request, Long productId, String message) {
-        return String.format("%s/products/%d?errorMessage=%s", request.getContextPath(), productId, message);
+    private String createErrorRedirectUrl(String redirectionUrl, Long productId, String message) {
+        String query = String.format("errorMessage=%s&id=%d", message, productId);
+        return redirectionUrl.concat(query);
     }
 
-    private String createSuccessRedirectUrl(HttpServletRequest request, Long productId, int quantity) {
+    private String createSuccessRedirectUrl(String redirectionUrl, Long productId, int quantity) {
         String successMessage = "Product was successfully added to cart";
-        return String.format("%s/products/%d?message=%s&quantity=%d", request.getContextPath(), productId, successMessage, quantity);
+        String query = String.format("message=%s&id=%d&quantity=%d", successMessage, productId, quantity);
+        return redirectionUrl.concat(query);
+    }
+
+    private char createSeparatorCharacter(String url) {
+        return url.contains("?") ? '&' : '?';
     }
 }
