@@ -12,7 +12,9 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class CustomCartServiceTest {
     @Mock
     private Cart cart;
     @InjectMocks
+    @Spy
     private CustomCartService cartService = CustomCartService.getInstance();
 
     @Before
@@ -48,6 +51,7 @@ public class CustomCartServiceTest {
             add(cartItem);
         }};
         when(cart.getCartItems()).thenReturn(items);
+
     }
 
     @Test
@@ -67,6 +71,7 @@ public class CustomCartServiceTest {
         int expectedQuantity = quantity + cartItem.getQuantity();
         Product product = new Product.ProductBuilder()
                 .setStock(stock)
+                .setPrice(BigDecimal.valueOf(1))
                 .build();
         when(productService.getProduct(cartItem.getProductId())).thenReturn(product);
         when(attributesHolder.getAttribute(any())).thenReturn(cart);
@@ -99,8 +104,10 @@ public class CustomCartServiceTest {
         CartItem expectedItem = new CartItem(id, quantity);
         Product product = new Product.ProductBuilder()
                 .setStock(stock)
+                .setPrice(BigDecimal.valueOf(1))
                 .build();
         when(productService.getProduct(id)).thenReturn(product);
+        when(productService.getProduct(cartItem.getProductId())).thenReturn(product);
         when(attributesHolder.getSynchronizationObject()).thenReturn(new Object());
         when(attributesHolder.getAttribute(any())).thenReturn(cart);
 

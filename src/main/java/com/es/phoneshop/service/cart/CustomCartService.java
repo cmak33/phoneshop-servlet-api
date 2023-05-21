@@ -9,12 +9,13 @@ import com.es.phoneshop.model.cart.CartProduct;
 import com.es.phoneshop.service.product.CustomProductService;
 import com.es.phoneshop.service.product.ProductService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 public class CustomCartService implements CartService {
 
-    private static final String CART_ATTRIBUTE_NAME = String.format("%s.cart", CustomCartService.class.getName());
+    public static final String CART_ATTRIBUTE_NAME = String.format("%s.cart", CustomCartService.class.getName());
     private static volatile CustomCartService instance;
     private ProductService productService;
 
@@ -40,7 +41,11 @@ public class CustomCartService implements CartService {
 
     @Override
     public List<CartProduct> getCartProducts(AttributesHolder attributesHolder) {
-        return getCart(attributesHolder).getCartItems()
+        return getProductsFromCart(getCart(attributesHolder));
+    }
+
+    private List<CartProduct> getProductsFromCart(Cart cart) {
+        return cart.getCartItems()
                 .stream()
                 .map(item -> new CartProduct(productService.getProduct(item.getProductId()), item.getQuantity()))
                 .toList();
@@ -52,6 +57,7 @@ public class CustomCartService implements CartService {
         if (item.isPresent()) {
             checkIfQuantityIsInStockBounds(id, newQuantity);
             item.get().setQuantity(newQuantity);
+            recalculateCartData(getCart(attributesHolder));
         }
     }
 
@@ -86,6 +92,7 @@ public class CustomCartService implements CartService {
             } else {
                 cart.addItem(new CartItem(productId, quantity));
             }
+            recalculateCartData(cart);
         }
     }
 
@@ -100,5 +107,25 @@ public class CustomCartService implements CartService {
         if (quantity > stock) {
             throw new OutOfStockException(quantity, stock);
         }
+    }
+
+    private void recalculateCartData(Cart cart) {
+        cart.setTotalQuantity(calculateTotalQuantity(cart));
+        cart.setTotalCost(calculateTotalCost(cart));
+    }
+
+    private int calculateTotalQuantity(Cart cart) {
+        return cart.getCartItems()
+                .stream()
+                .mapToInt(CartItem::getQuantity)
+                .sum();
+    }
+
+    private BigDecimal calculateTotalCost(Cart cart) {
+        return getProductsFromCart(cart).stream()
+                .map(item -> item.product()
+                        .getPrice()
+                        .multiply(BigDecimal.valueOf(item.quantity())))
+                .reduce(BigDecimal.valueOf(0), BigDecimal::add);
     }
 }
