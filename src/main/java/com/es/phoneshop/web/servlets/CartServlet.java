@@ -1,7 +1,7 @@
 package com.es.phoneshop.web.servlets;
 
-import com.es.phoneshop.exception.CustomParseException;
 import com.es.phoneshop.exception.OutOfStockException;
+import com.es.phoneshop.exception.QuantityParseException;
 import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.attributesHolder.HttpSessionAttributesHolder;
 import com.es.phoneshop.model.parser.QuantityParser;
@@ -38,29 +38,28 @@ public class CartServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        quantityParser.setLocale(request.getLocale());
-        Map<Long, String> productErrors = new HashMap<>();
+        Map<Long, String> errors = new HashMap<>();
         String[] productsId = request.getParameterValues("productId");
         String[] quantities = request.getParameterValues("quantity");
         AttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
         for (int i = 0; i < productsId.length; i++) {
             Long id = Long.valueOf(productsId[i]);
             try {
-                updateProduct(attributesHolder, id, quantities[i]);
-            } catch (CustomParseException | OutOfStockException exception) {
-                productErrors.put(id, exception.getMessage());
+                int quantity = quantityParser.parse(request.getLocale(), quantities[i]);
+                updateProduct(attributesHolder, id, quantity);
+            } catch (QuantityParseException | OutOfStockException exception) {
+                errors.put(id, exception.getMessage());
             }
         }
-        if (productErrors.isEmpty()) {
+        if (errors.isEmpty()) {
             response.sendRedirect(createSuccessUrl(request));
         } else {
-            request.setAttribute("errors", productErrors);
+            request.setAttribute("errors", errors);
             doGet(request, response);
         }
     }
 
-    private void updateProduct(AttributesHolder attributesHolder, Long id, String quantityStr) throws CustomParseException, OutOfStockException {
-        int quantity = quantityParser.parse(quantityStr);
+    private void updateProduct(AttributesHolder attributesHolder, Long id, int quantity) throws OutOfStockException {
         cartService.updateItem(attributesHolder, id, quantity);
     }
 

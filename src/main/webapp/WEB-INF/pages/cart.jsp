@@ -6,13 +6,14 @@
 <jsp:useBean id="products" type="java.util.List" scope="request"/>
 
 <tags:master pageTitle="Cart">
+    <c:set var="contextPath" value="${pageContext.servletContext.contextPath}"/>
     <c:if test="${not empty param.message}">
         <p style="color : green">${param.message}</p>
     </c:if>
     <c:if test="${not empty errors}">
         <p style="color : red">There were errors during update</p>
     </c:if>
-    <form method="post" action="${pageContext.servletContext.contextPath}/cart">
+    <form method="post" action="${contextPath}/cart">
         <table id="productsTable">
             <thead>
             <tr>
@@ -33,29 +34,30 @@
             </thead>
             <tbody>
             <c:forEach var="item" items="${products}" varStatus="status">
+                <c:set var="product" value="${item.product()}"/>
                 <tr>
                     <td>
-                        <img class="product-tile" src="${item.product().imageUrl}" alt="no image">
+                        <img class="product-tile" src="${product.imageUrl}" alt="no image">
                     </td>
                     <td>
-                        <a href="${pageContext.servletContext.contextPath}/products/${item.product().getId()}">${item.product().description}</a>
+                        <a href="${contextPath}/products/${product.getId()}">${product.description}</a>
                     </td>
                     <td>
-                        <c:set var="error" value="${errors[item.product().id]}"/>
+                        <c:set var="error" value="${errors[product.id]}"/>
                         <input type="text" name="quantity" value="${empty error?item.quantity():''}">
-                        <input type="hidden" name="productId" value="${item.product().id}">
+                        <input type="hidden" name="productId" value="${product.id}">
                         <c:if test="${not empty error}">
                             <div style="color : red">${error}</div>
                         </c:if>
                     </td>
                     <td class="price">
-                        <a href="${pageContext.servletContext.contextPath}/price-history/${item.product().id}"><fmt:formatNumber
-                                value="${item.product().price}"
-                                type="currency" currencySymbol="${item.product().currency.symbol}"/></a>
+                        <a href="${contextPath}/price-history/${product.id}"><fmt:formatNumber
+                                value="${product.price}"
+                                type="currency" currencySymbol="${product.currency.symbol}"/></a>
                     </td>
                     <td>
                         <button form="deleteItem"
-                                formaction="${pageContext.servletContext.contextPath}/cart/delete-item/${item.product().id}">
+                                formaction="${contextPath}/cart/delete-item/${product.id}">
                             delete
                         </button>
                     </td>
@@ -69,5 +71,5 @@
     </form>
     <form method="post" id="deleteItem">
     </form>
-    <a href="${pageContext.servletContext.contextPath}/products">Back to product list</a>
+    <a href="${contextPath}/products">Back to product list</a>
 </tags:master>

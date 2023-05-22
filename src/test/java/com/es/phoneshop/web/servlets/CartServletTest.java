@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -44,9 +45,11 @@ public class CartServletTest {
     private QuantityParser quantityParser;
     @InjectMocks
     private final CartServlet cartServlet = new CartServlet();
+    private final Locale locale = Locale.ENGLISH;
 
     @Before
     public void setup() {
+        when(request.getLocale()).thenReturn(locale);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
@@ -85,8 +88,8 @@ public class CartServletTest {
         String[] quantities = {String.valueOf(quantity), "100"};
         when(request.getParameterValues("productId")).thenReturn(productsId);
         when(request.getParameterValues("quantity")).thenReturn(quantities);
-        when(quantityParser.parse(any())).thenReturn(0);
-        when(quantityParser.parse(quantities[0])).thenReturn(quantity);
+        when(quantityParser.parse(eq(locale), any())).thenReturn(0);
+        when(quantityParser.parse(locale, quantities[0])).thenReturn(quantity);
         doThrow(exception).when(cartService).updateItem(any(), eq(productWithErrorId), eq(quantity));
 
         cartServlet.doPost(request, response);

@@ -4,14 +4,13 @@ import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.product.CustomProductService;
 import com.es.phoneshop.service.product.ProductService;
+import com.es.phoneshop.utility.SessionAttributeNames;
 
 import java.util.List;
 
 public class CustomRecentlyViewedProductService implements RecentlyViewedProductService {
 
     private static final int MAX_VIEWED_PRODUCTS_COUNT = 3;
-    private static final String VIEWED_PRODUCTS_ATTRIBUTE_NAME = String.format("%s.viewed",
-            CustomRecentlyViewedProductService.class.getName());
     private static volatile CustomRecentlyViewedProductService instance;
     private ProductService productService;
 
@@ -39,7 +38,7 @@ public class CustomRecentlyViewedProductService implements RecentlyViewedProduct
 
     @Override
     public void setRecentlyViewedProducts(AttributesHolder attributesHolder, List<Long> recentlyViewedProducts) {
-        attributesHolder.setAttribute(VIEWED_PRODUCTS_ATTRIBUTE_NAME, recentlyViewedProducts);
+        attributesHolder.setAttribute(SessionAttributeNames.VIEWED_PRODUCTS_ATTRIBUTE_NAME, recentlyViewedProducts);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class CustomRecentlyViewedProductService implements RecentlyViewedProduct
     }
 
     private List<Long> getCurrentlyViewedProductsId(AttributesHolder attributesHolder) {
-        return (List<Long>) attributesHolder.getAttribute(VIEWED_PRODUCTS_ATTRIBUTE_NAME);
+        return (List<Long>) attributesHolder.getAttribute(SessionAttributeNames.VIEWED_PRODUCTS_ATTRIBUTE_NAME);
     }
 
     public static int getMaxViewedProductsCount() {

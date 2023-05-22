@@ -1,28 +1,24 @@
 package com.es.phoneshop.model.parser;
 
-import com.es.phoneshop.exception.CustomParseException;
-import lombok.Setter;
+import com.es.phoneshop.exception.QuantityParseException;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
+import java.text.ParsePosition;
 import java.util.Locale;
 
-@Setter
 public class QuantityParser implements Parser<Integer> {
 
-    private Locale locale = Locale.ENGLISH;
-
     @Override
-    public Integer parse(String str) throws CustomParseException {
+    public Integer parse(Locale locale, String str) throws QuantityParseException {
         NumberFormat numberFormat = NumberFormat.getInstance(locale);
-        int quantity;
-        try {
-            quantity = numberFormat.parse(str).intValue();
-        } catch (ParseException exception) {
-            throw new CustomParseException("Quantity was not a number");
+        ParsePosition pos = new ParsePosition(0);
+        Number quantityNumber = numberFormat.parse(str, pos);
+        if (quantityNumber == null || pos.getIndex() != str.length()) {
+            throw new QuantityParseException("Quantity was not a number");
         }
+        int quantity = quantityNumber.intValue();
         if (quantity <= 0) {
-            throw new CustomParseException("Quantity should be bigger than zero");
+            throw new QuantityParseException("Quantity should be bigger than zero");
         }
         return quantity;
     }

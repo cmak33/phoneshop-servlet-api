@@ -8,6 +8,7 @@ import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.cart.CartProduct;
 import com.es.phoneshop.service.product.CustomProductService;
 import com.es.phoneshop.service.product.ProductService;
+import com.es.phoneshop.utility.SessionAttributeNames;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,7 +16,6 @@ import java.util.Optional;
 
 public class CustomCartService implements CartService {
 
-    public static final String CART_ATTRIBUTE_NAME = String.format("%s.cart", CustomCartService.class.getName());
     private static volatile CustomCartService instance;
     private ProductService productService;
 
@@ -36,7 +36,7 @@ public class CustomCartService implements CartService {
 
     @Override
     public Cart getCart(AttributesHolder attributesHolder) {
-        return (Cart) attributesHolder.getAttribute(CART_ATTRIBUTE_NAME);
+        return (Cart) attributesHolder.getAttribute(SessionAttributeNames.CART_ATTRIBUTE_NAME);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class CustomCartService implements CartService {
 
     @Override
     public void setCart(AttributesHolder attributesHolder, Cart cart) {
-        attributesHolder.setAttribute(CART_ATTRIBUTE_NAME, cart);
+        attributesHolder.setAttribute(SessionAttributeNames.CART_ATTRIBUTE_NAME, cart);
     }
 
     @Override
@@ -130,6 +130,6 @@ public class CustomCartService implements CartService {
                 .map(item -> item.product()
                         .getPrice()
                         .multiply(BigDecimal.valueOf(item.quantity())))
-                .reduce(BigDecimal.valueOf(0), BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

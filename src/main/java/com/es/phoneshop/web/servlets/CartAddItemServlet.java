@@ -32,10 +32,9 @@ public class CartAddItemServlet extends HttpServlet {
             long id = Long.parseLong(request.getPathInfo().substring(1));
             String redirectionUrl = request.getParameter("redirectionPath");
             redirectionUrl += createSeparatorCharacter(redirectionUrl);
-            quantityParser.setLocale(request.getLocale());
             int quantity;
             try {
-                quantity = quantityParser.parse(request.getParameter("quantity"));
+                quantity = quantityParser.parse(request.getLocale(), request.getParameter("quantity"));
             } catch (CustomParseException parseException) {
                 response.sendRedirect(createErrorRedirectUrl(redirectionUrl, id, parseException.getMessage()));
                 return;
