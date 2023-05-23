@@ -1,9 +1,7 @@
 package com.es.phoneshop.web.servlets;
 
-import com.es.phoneshop.exception.CustomParseException;
 import com.es.phoneshop.exception.OutOfStockException;
-import com.es.phoneshop.exception.QuantityParseException;
-import com.es.phoneshop.model.parser.QuantityParser;
+import com.es.phoneshop.model.parser.QuantityValidator;
 import com.es.phoneshop.service.cart.CartService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,13 +10,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,7 +35,7 @@ public class CartAddItemServletTest {
     @Mock
     private CartService cartService;
     @Mock
-    private QuantityParser quantityParser;
+    private QuantityValidator quantityValidator;
     @InjectMocks
     private final CartAddItemServlet cartServlet = new CartAddItemServlet();
     private final Locale locale = Locale.ENGLISH;
@@ -54,7 +56,7 @@ public class CartAddItemServletTest {
     }
 
     @Test
-    public void givenNotNumberQuantity_whenDoPost_thenSendErrorRedirect() throws IOException, QuantityParseException {
+    public void givenNotNumberQuantity_whenDoPost_thenSendErrorRedirect() throws IOException {
         long id = 1L;
         String quantity = "not a number";
         String message = "Quantity was not a number";
@@ -62,7 +64,7 @@ public class CartAddItemServletTest {
         when(request.getParameter("quantity")).thenReturn(quantity);
         when(request.getParameter("redirectionPath")).thenReturn(redirectionPath);
         when(request.getPathInfo()).thenReturn(String.format("/%d", id));
-        when(quantityParser.parse(locale, quantity)).thenThrow(new CustomParseException(message));
+        doAnswer(invocation -> addErrorToMapAndReturnEmpty(invocation, message)).when(quantityValidator).tryParse(any(), eq(id), eq(locale), eq(quantity));
         redirectionPath += '?';
         String expectedRedirect = createErrorRedirectUrl(redirectionPath, id, message);
 
@@ -71,15 +73,22 @@ public class CartAddItemServletTest {
         verify(response).sendRedirect(expectedRedirect);
     }
 
+    private Optional<Integer> addErrorToMapAndReturnEmpty(InvocationOnMock invocation, String message) {
+        Map<Long, String> errorsMap = invocation.getArgument(0);
+        Long productId = invocation.getArgument(1);
+        errorsMap.put(productId, message);
+        return Optional.empty();
+    }
+
     @Test
-    public void givenQuantityOutOfStockBounds_whenDoPost_thenSendErrorRedirect() throws IOException, OutOfStockException, QuantityParseException {
+    public void givenQuantityOutOfStockBounds_whenDoPost_thenSendErrorRedirect() throws IOException, OutOfStockException {
         long id = 1L;
         int quantity = 2;
         int stock = 1;
         String redirectionPath = "/path";
         OutOfStockException outOfStockException = new OutOfStockException(quantity, stock);
         when(request.getParameter("quantity")).thenReturn(String.valueOf(quantity));
-        when(quantityParser.parse(locale, String.valueOf(quantity))).thenReturn(quantity);
+        when(quantityValidator.tryParse(any(), eq(id), eq(locale), eq(String.valueOf(quantity)))).thenReturn(Optional.of(quantity));
         when(request.getPathInfo()).thenReturn(String.format("/%d", id));
         when(request.getParameter("redirectionPath")).thenReturn(redirectionPath);
         doThrow(outOfStockException).when(cartService).addItem(any(), eq(id), eq(quantity));
@@ -92,12 +101,12 @@ public class CartAddItemServletTest {
     }
 
     @Test
-    public void givenValidQuantity_whenDoPost_thenSendSuccessRedirect() throws IOException, OutOfStockException, QuantityParseException {
+    public void givenValidQuantity_whenDoPost_thenSendSuccessRedirect() throws IOException, OutOfStockException {
         long id = 1L;
         int quantity = 2;
         String redirectionPath = "/path?param=1";
         when(request.getParameter("quantity")).thenReturn(String.valueOf(quantity));
-        when(quantityParser.parse(locale, String.valueOf(quantity))).thenReturn(quantity);
+        when(quantityValidator.tryParse(any(), eq(id), eq(locale), eq(String.valueOf(quantity)))).thenReturn(Optional.of(quantity));
         when(request.getPathInfo()).thenReturn(String.format("/%d", id));
         when(request.getParameter("redirectionPath")).thenReturn(redirectionPath);
         redirectionPath += "&";

@@ -10,6 +10,9 @@
     <c:if test="${not empty param.message}">
         <p style="color : green">${param.message}</p>
     </c:if>
+    <c:if test="${not empty param.errorMessage}">
+        <p style="color : red">${param.errorMessage}</p>
+    </c:if>
     <c:if test="${not empty errors}">
         <p style="color : red">There were errors during update</p>
     </c:if>

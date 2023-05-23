@@ -1,9 +1,8 @@
 package com.es.phoneshop.web.servlets;
 
-import com.es.phoneshop.exception.CustomParseException;
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.cart.CartProduct;
-import com.es.phoneshop.model.parser.QuantityParser;
+import com.es.phoneshop.model.parser.QuantityValidator;
 import com.es.phoneshop.service.cart.CartService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -22,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -42,7 +42,7 @@ public class CartServletTest {
     @Mock
     private CartService cartService;
     @Mock
-    private QuantityParser quantityParser;
+    private QuantityValidator quantityValidator;
     @InjectMocks
     private final CartServlet cartServlet = new CartServlet();
     private final Locale locale = Locale.ENGLISH;
@@ -78,7 +78,7 @@ public class CartServletTest {
     }
 
     @Test
-    public void givenInvalidUpdateData_whenDoPost_thenSetErrorToAttributes() throws ServletException, IOException, OutOfStockException, CustomParseException {
+    public void givenInvalidUpdateData_whenDoPost_thenSetErrorToAttributes() throws ServletException, IOException, OutOfStockException {
         Long productWithErrorId = 1L;
         int quantity = 1;
         OutOfStockException exception = new OutOfStockException(1, 0);
@@ -88,8 +88,7 @@ public class CartServletTest {
         String[] quantities = {String.valueOf(quantity), "100"};
         when(request.getParameterValues("productId")).thenReturn(productsId);
         when(request.getParameterValues("quantity")).thenReturn(quantities);
-        when(quantityParser.parse(eq(locale), any())).thenReturn(0);
-        when(quantityParser.parse(locale, quantities[0])).thenReturn(quantity);
+        when(quantityValidator.tryParse(any(), eq(productWithErrorId), eq(locale), eq(quantities[0]))).thenReturn(Optional.of(quantity));
         doThrow(exception).when(cartService).updateItem(any(), eq(productWithErrorId), eq(quantity));
 
         cartServlet.doPost(request, response);
