@@ -52,7 +52,7 @@ public class CustomCartService implements CartService {
     }
 
     @Override
-    public void updateItem(AttributesHolder attributesHolder, Long id, int newQuantity) throws OutOfStockException, ProductNotInCartException {
+    public void updateCartItem(AttributesHolder attributesHolder, Long id, int newQuantity) throws OutOfStockException, ProductNotInCartException {
         Optional<CartItem> item = findCartItemById(getCart(attributesHolder), id);
         if (item.isPresent()) {
             checkIfQuantityIsInStockBounds(id, newQuantity);
@@ -64,7 +64,7 @@ public class CustomCartService implements CartService {
     }
 
     @Override
-    public void deleteItem(AttributesHolder attributesHolder, Long id) throws ProductNotInCartException {
+    public void deleteCartItem(AttributesHolder attributesHolder, Long id) throws ProductNotInCartException {
         boolean wasRemoved;
         synchronized (attributesHolder.getSynchronizationObject()) {
             wasRemoved = getCart(attributesHolder).getCartItems()
@@ -83,7 +83,7 @@ public class CustomCartService implements CartService {
     }
 
     @Override
-    public void addItem(AttributesHolder attributesHolder, Long productId, int quantity) throws OutOfStockException {
+    public void addCartItem(AttributesHolder attributesHolder, Long productId, int quantity) throws OutOfStockException {
         Cart cart = getCart(attributesHolder);
         synchronized (attributesHolder.getSynchronizationObject()) {
             Optional<CartItem> oldCartItem = findCartItemById(cart, productId);

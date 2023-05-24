@@ -1,9 +1,11 @@
 package com.es.phoneshop.web.servlets;
 
+import com.es.phoneshop.exception.CustomParseException;
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.attributesHolder.HttpSessionAttributesHolder;
-import com.es.phoneshop.model.parser.QuantityValidator;
+import com.es.phoneshop.model.parser.QuantityParser;
+import com.es.phoneshop.model.validator.QuantityValidator;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.CustomCartService;
 import jakarta.servlet.ServletConfig;
@@ -15,17 +17,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class CartServlet extends HttpServlet {
 
     private CartService cartService;
+    private QuantityParser quantityParser;
     private QuantityValidator quantityValidator;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         cartService = CustomCartService.getInstance();
+        quantityParser = QuantityParser.getInstance();
         quantityValidator = QuantityValidator.getInstance();
     }
 
@@ -45,12 +48,11 @@ public class CartServlet extends HttpServlet {
             AttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
             for (int i = 0; i < productsId.length; i++) {
                 Long id = Long.valueOf(productsId[i]);
-                Optional<Integer> quantity = quantityValidator
-                        .tryParse(errors, id, request.getLocale(), quantities[i]);
-                if (quantity.isPresent()) {
+                if (quantityValidator.validate(quantities[i], request.getLocale(), errors, id)) {
                     try {
-                        updateProduct(attributesHolder, id, quantity.get());
-                    } catch (OutOfStockException exception) {
+                        int quantity = quantityParser.parse(quantities[i], request.getLocale());
+                        cartService.updateCartItem(attributesHolder, id, quantity);
+                    } catch (CustomParseException | OutOfStockException exception) {
                         errors.put(id, exception.getMessage());
                     }
                 }
@@ -64,10 +66,6 @@ public class CartServlet extends HttpServlet {
         } else {
             response.sendRedirect(createEmptyCartErrorUrl(request));
         }
-    }
-
-    private void updateProduct(AttributesHolder attributesHolder, Long id, int quantity) throws OutOfStockException {
-        cartService.updateItem(attributesHolder, id, quantity);
     }
 
     private String createSuccessUrl(HttpServletRequest request) {

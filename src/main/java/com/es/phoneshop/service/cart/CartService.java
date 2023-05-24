@@ -14,11 +14,11 @@ public interface CartService {
 
     List<CartProduct> getCartProducts(AttributesHolder attributesHolder);
 
-    void updateItem(AttributesHolder attributesHolder, Long id, int newQuantity) throws OutOfStockException, ProductNotInCartException;
+    void updateCartItem(AttributesHolder attributesHolder, Long id, int newQuantity) throws OutOfStockException, ProductNotInCartException;
 
-    void deleteItem(AttributesHolder attributesHolder, Long id) throws ProductNotInCartException;
+    void deleteCartItem(AttributesHolder attributesHolder, Long id) throws ProductNotInCartException;
 
     void setCart(AttributesHolder attributesHolder, Cart cart);
 
-    void addItem(AttributesHolder attributesHolder, Long productId, int quantity) throws OutOfStockException;
+    void addCartItem(AttributesHolder attributesHolder, Long productId, int quantity) throws OutOfStockException;
 }

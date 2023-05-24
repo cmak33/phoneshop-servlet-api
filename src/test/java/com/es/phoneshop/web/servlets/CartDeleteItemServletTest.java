@@ -44,7 +44,7 @@ public class CartDeleteItemServletTest {
     public void givenNonExistingId_whenDoPost_thenSend404Error() throws IOException {
         Long id = 1L;
         when(request.getPathInfo()).thenReturn(String.format("/%d", id));
-        doThrow(new ProductNotInCartException(id)).when(cartService).deleteItem(any(), eq(id));
+        doThrow(new ProductNotInCartException(id)).when(cartService).deleteCartItem(any(), eq(id));
 
         cartDeleteItemServlet.doPost(request, response);
 

@@ -29,7 +29,7 @@ public class CartDeleteItemServlet extends HttpServlet {
             long id = Long.parseLong(request.getPathInfo().substring(1));
             try {
                 AttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
-                cartService.deleteItem(attributesHolder, id);
+                cartService.deleteCartItem(attributesHolder, id);
             } catch (ProductNotInCartException productNotInCartException) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;

@@ -80,7 +80,7 @@ public class CustomCartServiceTest {
         int quantity = 1;
         int expectedQuantity = quantity + cartItem.getQuantity();
 
-        cartService.addItem(attributesHolder, cartItem.getProductId(), quantity);
+        cartService.addCartItem(attributesHolder, cartItem.getProductId(), quantity);
 
         verify(cartItem).setQuantity(expectedQuantity);
     }
@@ -89,7 +89,7 @@ public class CustomCartServiceTest {
     public void givenOutOfStockQuantity_whenAddItem_thenThrowOutOfStockException() throws OutOfStockException {
         int quantity = cartProduct.getStock() + 1;
 
-        cartService.addItem(attributesHolder, cartItem.getProductId(), quantity);
+        cartService.addCartItem(attributesHolder, cartItem.getProductId(), quantity);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class CustomCartServiceTest {
         CartItem expectedItem = new CartItem(id, quantity);
         when(productService.getProduct(id)).thenReturn(cartProduct);
 
-        cartService.addItem(attributesHolder, id, quantity);
+        cartService.addCartItem(attributesHolder, id, quantity);
 
         verify(cart).addItem(expectedItem);
     }
@@ -116,14 +116,14 @@ public class CustomCartServiceTest {
         List<CartItem> expected = new ArrayList<>(cart.getCartItems());
         expected.remove(cartItem);
 
-        cartService.deleteItem(attributesHolder, cartItem.getProductId());
+        cartService.deleteCartItem(attributesHolder, cartItem.getProductId());
 
         assertEquals(expected, cart.getCartItems());
     }
 
     @Test(expected = ProductNotInCartException.class)
     public void givenNonExistingProductId_whenDeleteItem_thenThrowProductNotInCartException() {
-        cartService.deleteItem(attributesHolder, -1L);
+        cartService.deleteCartItem(attributesHolder, -1L);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class CustomCartServiceTest {
         int quantity = cartProduct.getStock();
         Long id = cartItem.getProductId();
 
-        cartService.updateItem(attributesHolder, id, quantity);
+        cartService.updateCartItem(attributesHolder, id, quantity);
 
         verify(cartItem).setQuantity(quantity);
     }
@@ -140,7 +140,7 @@ public class CustomCartServiceTest {
     public void givenOutOfStockQuantity_whenUpdateItem_thenThrowOutOfStockException() throws OutOfStockException {
         int quantity = cartProduct.getStock() + 1;
 
-        cartService.updateItem(attributesHolder, cartItem.getProductId(), quantity);
+        cartService.updateCartItem(attributesHolder, cartItem.getProductId(), quantity);
     }
 
     @Test(expected = ProductNotInCartException.class)
@@ -149,7 +149,7 @@ public class CustomCartServiceTest {
         int quantity = 1;
         when(productService.getProduct(id)).thenThrow(new ProductNotFoundException(id));
 
-        cartService.updateItem(attributesHolder, id, quantity);
+        cartService.updateCartItem(attributesHolder, id, quantity);
     }
 
 

@@ -47,7 +47,7 @@
                     </td>
                     <td>
                         <c:set var="error" value="${errors[product.id]}"/>
-                        <input type="text" name="quantity" value="${empty error?item.quantity():''}">
+                        <input type="text" name="quantity" value="${item.quantity()}">
                         <input type="hidden" name="productId" value="${product.id}">
                         <c:if test="${not empty error}">
                             <div style="color : red">${error}</div>

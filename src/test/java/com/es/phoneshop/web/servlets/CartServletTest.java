@@ -1,8 +1,10 @@
 package com.es.phoneshop.web.servlets;
 
+import com.es.phoneshop.exception.CustomParseException;
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.cart.CartProduct;
-import com.es.phoneshop.model.parser.QuantityValidator;
+import com.es.phoneshop.model.parser.QuantityParser;
+import com.es.phoneshop.model.validator.QuantityValidator;
 import com.es.phoneshop.service.cart.CartService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -21,11 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,6 +43,8 @@ public class CartServletTest {
     private RequestDispatcher requestDispatcher;
     @Mock
     private CartService cartService;
+    @Mock
+    private QuantityParser quantityParser;
     @Mock
     private QuantityValidator quantityValidator;
     @InjectMocks
@@ -65,11 +69,15 @@ public class CartServletTest {
     }
 
     @Test
-    public void givenValidParameters_whenDoPost_thenRedirect() throws ServletException, IOException {
+    public void givenValidParameters_whenDoPost_thenRedirect() throws ServletException, IOException, CustomParseException {
         String[] productsId = {"1", "2"};
         String[] quantities = {"1", "100"};
         when(request.getParameterValues("productId")).thenReturn(productsId);
         when(request.getParameterValues("quantity")).thenReturn(quantities);
+        when(quantityValidator.validate(any(), eq(locale), any(), any())).thenReturn(true);
+        doAnswer(invocationOnMock -> Integer.parseInt(invocationOnMock.getArgument(0)))
+                .when(quantityParser)
+                .parse(any(), eq(locale));
         String expectedUrl = createSuccessUrl(request);
 
         cartServlet.doPost(request, response);
@@ -78,7 +86,7 @@ public class CartServletTest {
     }
 
     @Test
-    public void givenInvalidUpdateData_whenDoPost_thenSetErrorToAttributes() throws ServletException, IOException, OutOfStockException {
+    public void givenOutOfStockQuantity_whenDoPost_thenSetErrorToAttributes() throws ServletException, IOException, OutOfStockException, CustomParseException {
         Long productWithErrorId = 1L;
         int quantity = 1;
         OutOfStockException exception = new OutOfStockException(1, 0);
@@ -88,8 +96,36 @@ public class CartServletTest {
         String[] quantities = {String.valueOf(quantity), "100"};
         when(request.getParameterValues("productId")).thenReturn(productsId);
         when(request.getParameterValues("quantity")).thenReturn(quantities);
-        when(quantityValidator.tryParse(any(), eq(productWithErrorId), eq(locale), eq(quantities[0]))).thenReturn(Optional.of(quantity));
-        doThrow(exception).when(cartService).updateItem(any(), eq(productWithErrorId), eq(quantity));
+        when(quantityValidator.validate(any(), eq(locale), any(), any())).thenReturn(true);
+        doAnswer(invocationOnMock -> Integer.parseInt(invocationOnMock.getArgument(0)))
+                .when(quantityParser)
+                .parse(any(), eq(locale));
+        doThrow(exception).when(cartService).updateCartItem(any(), eq(productWithErrorId), eq(quantity));
+
+        cartServlet.doPost(request, response);
+
+        verify(request).setAttribute("errors", errors);
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void givenInvalidQuantity_whenDoPost_thenSetErrorsToAttributes() throws ServletException, IOException {
+        Long productWithErrorId = 1L;
+        int quantity = -1;
+        String errorMessage = "Quantity should be positive and bigger than zero number";
+        Map<Long, String> errors = new HashMap<>();
+        errors.put(productWithErrorId, errorMessage);
+        String[] productsId = {productWithErrorId.toString()};
+        String[] quantities = {String.valueOf(quantity)};
+        when(request.getParameterValues("productId")).thenReturn(productsId);
+        when(request.getParameterValues("quantity")).thenReturn(quantities);
+        doAnswer(invocationOnMock -> {
+            Map<Long, String> errorsMap = invocationOnMock.getArgument(2);
+            errorsMap.put(invocationOnMock.getArgument(3), errorMessage);
+            return false;
+        })
+                .when(quantityValidator)
+                .validate(eq(quantities[0]), eq(locale), any(), eq(productWithErrorId));
 
         cartServlet.doPost(request, response);
 
