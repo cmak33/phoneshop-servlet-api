@@ -8,6 +8,8 @@
 <jsp:useBean id="recentlyViewedProducts" type="java.util.List" scope="request"/>
 
 <tags:master pageTitle="Product details">
+    <c:set var="contextPath" value="${pageContext.servletContext.contextPath}"/>
+    <a href="${contextPath}/cart">Cart</a>
     <c:if test="${not empty param.errorMessage}">
         <p style="color: red">${param.errorMessage}</p>
     </c:if>
@@ -55,9 +57,11 @@
             </td>
         </tr>
     </table>
-    <form method="POST" action="${pageContext.servletContext.contextPath}/add-product-to-cart/${product.id}">
+    <form method="POST" action="${contextPath}/add-product-to-cart/${product.id}">
         <label for="quantity">quantity</label>
         <input id="quantity" type="number" value="${not empty param.quantity ? param.quantity : 1}" name="quantity">
+        <input type="hidden" name="redirectionPath"
+               value="${contextPath}/products/${product.id}">
         <input type="submit" value="Add to cart">
     </form>
     <c:if test="${not empty recentlyViewedProducts}">
@@ -68,7 +72,7 @@
                     <td class="viewed-product">
                         <img class="product-tile" src="${product.imageUrl}" alt="no image">
                         <p>
-                            <a href="${pageContext.servletContext.contextPath}/products/${product.getId()}">${product.description}</a>
+                            <a href="${contextPath}/products/${product.getId()}">${product.description}</a>
                         </p>
                         <fmt:formatNumber
                                 value="${product.price}"
@@ -78,5 +82,5 @@
             </c:forEach>
         </table>
     </c:if>
-    <a href="${pageContext.servletContext.contextPath}/products">Back to product list</a>
+    <a href="${contextPath}/products">Back to product list</a>
 </tags:master>

@@ -1,7 +1,11 @@
 package com.es.phoneshop.web.servlets;
 
+import com.es.phoneshop.exception.CustomParseException;
 import com.es.phoneshop.exception.OutOfStockException;
+import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.attributesHolder.HttpSessionAttributesHolder;
+import com.es.phoneshop.model.parser.QuantityParser;
+import com.es.phoneshop.model.validator.QuantityValidator;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.CustomCartService;
 import jakarta.servlet.ServletConfig;
@@ -11,63 +15,64 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CartServlet extends HttpServlet {
 
     private CartService cartService;
+    private QuantityParser quantityParser;
+    private QuantityValidator quantityValidator;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         cartService = CustomCartService.getInstance();
+        quantityParser = QuantityParser.getInstance();
+        quantityValidator = QuantityValidator.getInstance();
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (request.getPathInfo() != null && request.getPathInfo().length() > 1) {
-            long id = Long.parseLong(request.getPathInfo().substring(1));
-            int quantity;
-            try {
-                quantity = parseQuantity(request.getLocale(), request.getParameter("quantity"));
-            } catch (ParseException parseException) {
-                response.sendRedirect(createErrorRedirectUrl(request, id, "Quantity was not a number"));
-                return;
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        AttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
+        request.setAttribute("products", cartService.getCartProducts(attributesHolder));
+        request.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String[] productsId = request.getParameterValues("productId");
+        String[] quantities = request.getParameterValues("quantity");
+        if (productsId != null && quantities != null) {
+            Map<Long, String> errors = new HashMap<>();
+            AttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
+            for (int i = 0; i < productsId.length; i++) {
+                Long id = Long.valueOf(productsId[i]);
+                if (quantityValidator.validate(quantities[i], request.getLocale(), errors, id)) {
+                    try {
+                        int quantity = quantityParser.parse(quantities[i], request.getLocale());
+                        cartService.updateCartItem(attributesHolder, id, quantity);
+                    } catch (CustomParseException | OutOfStockException exception) {
+                        errors.put(id, exception.getMessage());
+                    }
+                }
             }
-            if (quantity <= 0) {
-                response.sendRedirect(createErrorRedirectUrl(request, id, "Quantity should be bigger than zero"));
-                return;
+            if (errors.isEmpty()) {
+                response.sendRedirect(createSuccessUrl(request));
+            } else {
+                request.setAttribute("errors", errors);
+                doGet(request, response);
             }
-            try {
-                addItemToCart(request, id, quantity);
-            } catch (OutOfStockException exception) {
-                response.sendRedirect(createErrorRedirectUrl(request, id, exception.getMessage()));
-                return;
-            }
-            response.sendRedirect(createSuccessRedirectUrl(request, id, quantity));
         } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            response.sendRedirect(createEmptyCartErrorUrl(request));
         }
     }
 
-    private int parseQuantity(Locale locale, String quantity) throws ParseException {
-        NumberFormat numberFormat = NumberFormat.getInstance(locale);
-        return numberFormat.parse(quantity).intValue();
+    private String createSuccessUrl(HttpServletRequest request) {
+        return String.format("%s/cart?message=Cart was updated successfully", request.getContextPath());
     }
 
-    private void addItemToCart(HttpServletRequest request, Long id, int quantity) throws OutOfStockException {
-        HttpSessionAttributesHolder httpSessionAttributesHolder = new HttpSessionAttributesHolder(request.getSession());
-        cartService.addItem(httpSessionAttributesHolder, id, quantity);
-    }
-
-    private String createErrorRedirectUrl(HttpServletRequest request, Long productId, String message) {
-        return String.format("%s/products/%d?errorMessage=%s", request.getContextPath(), productId, message);
-    }
-
-    private String createSuccessRedirectUrl(HttpServletRequest request, Long productId, int quantity) {
-        String successMessage = "Product was successfully added to cart";
-        return String.format("%s/products/%d?message=%s&quantity=%d", request.getContextPath(), productId, successMessage, quantity);
+    private String createEmptyCartErrorUrl(HttpServletRequest request) {
+        return String.format("%s/cart?errorMessage=There were no products to update", request.getContextPath());
     }
 }

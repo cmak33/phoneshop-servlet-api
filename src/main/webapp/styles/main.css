@@ -37,6 +37,10 @@ td.viewed-product {
     text-align: center;
 }
 
+.minicart {
+    font: 400 50px/1.3 'Lobster Two', Helvetica, sans-serif;
+}
+
 /* Page specific styles */
 body.product-list {
 
