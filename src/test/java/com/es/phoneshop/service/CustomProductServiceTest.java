@@ -1,7 +1,7 @@
 package com.es.phoneshop.service;
 
 import com.es.phoneshop.configuration.ProductComparatorsConfiguration;
-import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.product.ProductDao;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.sorting.SortField;
@@ -44,7 +44,7 @@ public class CustomProductServiceTest {
     @Test
     public void givenValidId_whenGetProduct_thenReturnProduct() {
         Product product = new Product();
-        when(productDao.getProduct(product.getId())).thenReturn(Optional.of(product));
+        when(productDao.getEntity(product.getId())).thenReturn(Optional.of(product));
 
         Product actual = customProductService.getProduct(product.getId());
 

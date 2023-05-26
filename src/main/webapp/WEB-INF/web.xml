@@ -68,6 +68,11 @@
         <servlet-class>com.es.phoneshop.web.servlets.CartDeleteItemServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>checkoutPage</servlet-name>
+        <servlet-class>com.es.phoneshop.web.servlets.CheckoutPageServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>productList</servlet-name>
         <url-pattern>/products</url-pattern>
@@ -101,6 +106,11 @@
     <servlet-mapping>
         <servlet-name>cartDeleteItem</servlet-name>
         <url-pattern>/cart/delete-item/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>checkoutPage</servlet-name>
+        <url-pattern>/checkout</url-pattern>
     </servlet-mapping>
 
     <error-page>

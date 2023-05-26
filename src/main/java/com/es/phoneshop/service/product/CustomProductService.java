@@ -1,8 +1,8 @@
 package com.es.phoneshop.service.product;
 
 import com.es.phoneshop.configuration.ProductComparatorsConfiguration;
-import com.es.phoneshop.dao.CustomProductDao;
-import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.product.CustomProductDao;
+import com.es.phoneshop.dao.product.ProductDao;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.sorting.SortField;
@@ -35,10 +35,9 @@ public class CustomProductService implements ProductService {
 
     @Override
     public Product getProduct(Long id) {
-        return productDao.getProduct(id)
+        return productDao.getEntity(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
-
 
     @Override
     public List<Product> findProducts() {

@@ -1,5 +1,6 @@
 package com.es.phoneshop.dao;
 
+import com.es.phoneshop.dao.product.CustomProductDao;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
@@ -47,24 +48,24 @@ public class CustomProductDaoTest {
 
     @Before
     public void setup() {
-        productDao.setProductList(createValidProducts());
+        productDao.setEntityList(createValidProducts());
     }
 
     @Test
     public void givenIdOfNotExistingProduct_whenGetProduct_thenReturnEmptyOptional() {
-        assertTrue(productDao.getProduct(-1L).isEmpty());
+        assertTrue(productDao.getEntity(-1L).isEmpty());
     }
 
     @Test
     public void givenNullId_whenGetProduct_thenReturnEmptyOptional() {
-        assertTrue(productDao.getProduct(null).isEmpty());
+        assertTrue(productDao.getEntity(null).isEmpty());
     }
 
     @Test
     public void givenExistingProduct_whenGetProduct_thenReturnProduct() {
-        Product product = productDao.getProductList().get(0);
+        Product product = productDao.getEntityList().get(0);
 
-        Optional<Product> actualProduct = productDao.getProduct(product.getId());
+        Optional<Product> actualProduct = productDao.getEntity(product.getId());
 
         assertTrue(actualProduct.isPresent());
         assertEquals(product, actualProduct.get());
@@ -72,7 +73,7 @@ public class CustomProductDaoTest {
 
     @Test
     public void givenValidProducts_whenFindProducts_thenReturnAllProducts() {
-        List<Product> expectedProducts = productDao.getProductList();
+        List<Product> expectedProducts = productDao.getEntityList();
 
         List<Product> actualProducts = productDao.findProducts();
 
@@ -81,10 +82,10 @@ public class CustomProductDaoTest {
 
     @Test
     public void givenValidAndInvalidProducts_whenFindProducts_thenReturnValidProducts() {
-        List<Product> validProducts = new ArrayList<>(productDao.getProductList());
+        List<Product> validProducts = new ArrayList<>(productDao.getEntityList());
         int invalidProductsCount = 10;
         List<Product> invalidProducts = createInvalidProducts(invalidProductsCount);
-        productDao.getProductList().addAll(invalidProducts);
+        productDao.getEntityList().addAll(invalidProducts);
 
         List<Product> actualProducts = productDao.findProducts();
 
@@ -97,20 +98,20 @@ public class CustomProductDaoTest {
 
         productDao.save(product);
 
-        assertTrue(productDao.getProductList().contains(product));
+        assertTrue(productDao.getEntityList().contains(product));
     }
 
     @Test
     public void givenProductWithNotUniqueId_whenSave_thenReplaceOldProduct() {
         int oldProductIndex = 0;
-        List<Product> productList = new ArrayList<>(productDao.getProductList());
+        List<Product> productList = new ArrayList<>(productDao.getEntityList());
         Product productToSave = new Product();
         productToSave.setId(productList.get(oldProductIndex).getId());
         productList.set(oldProductIndex, productToSave);
 
         productDao.save(productToSave);
 
-        assertEquals(productList, productDao.getProductList());
+        assertEquals(productList, productDao.getEntityList());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -125,13 +126,13 @@ public class CustomProductDaoTest {
 
     @Test
     public void givenIdOfExistingProduct_whenDelete_thenRemoveProduct() {
-        List<Product> expectedProductList = new ArrayList<>(productDao.getProductList());
+        List<Product> expectedProductList = new ArrayList<>(productDao.getEntityList());
         Product productToDelete = expectedProductList.get(0);
         expectedProductList.remove(productToDelete);
 
         productDao.delete(productToDelete.getId());
 
-        assertEquals(expectedProductList, productDao.getProductList());
+        assertEquals(expectedProductList, productDao.getEntityList());
     }
 
     @Test(expected = IllegalArgumentException.class)

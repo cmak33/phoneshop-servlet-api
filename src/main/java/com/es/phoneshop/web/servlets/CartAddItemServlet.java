@@ -4,7 +4,7 @@ import com.es.phoneshop.exception.CustomParseException;
 import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.attributesHolder.HttpSessionAttributesHolder;
 import com.es.phoneshop.model.parser.QuantityParser;
-import com.es.phoneshop.model.validator.QuantityValidator;
+import com.es.phoneshop.model.validator.validator.QuantityValidator;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.CustomCartService;
 import jakarta.servlet.ServletConfig;

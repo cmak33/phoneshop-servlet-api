@@ -1,5 +1,6 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.entity.Entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Product {
+public class Product implements Entity {
 
     private Long id;
     private String code;

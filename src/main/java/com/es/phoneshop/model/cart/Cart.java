@@ -14,7 +14,7 @@ public class Cart implements Serializable {
 
     private final List<CartItem> cartItems;
     private int totalQuantity;
-    private BigDecimal totalCost;
+    private BigDecimal totalCost = BigDecimal.ZERO;
 
     public Cart() {
         cartItems = new ArrayList<>();
