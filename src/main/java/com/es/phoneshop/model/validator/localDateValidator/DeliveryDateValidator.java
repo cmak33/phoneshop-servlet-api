@@ -25,6 +25,7 @@ public class DeliveryDateValidator implements LocalDateValidator {
     public boolean validate(LocalDate localeDate, Map<String, String> errors, String dateParameterName) {
         if (!(localeDate.isAfter(LocalDate.now()) || localeDate.equals(LocalDate.now()))) {
             errors.put(dateParameterName, "Value can't be past date");
+            return false;
         }
         return true;
     }

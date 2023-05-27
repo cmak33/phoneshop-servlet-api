@@ -135,21 +135,26 @@
 
     <error-page>
         <error-code>500</error-code>
-        <location>/WEB-INF/pages/exceptions/internalServerException.jsp</location>
+        <location>/WEB-INF/exceptionPages/internalServerException.jsp</location>
     </error-page>
 
     <error-page>
         <error-code>404</error-code>
-        <location>/WEB-INF/pages/exceptions/notFoundException.jsp</location>
+        <location>/WEB-INF/exceptionPages/notFoundException.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>429</error-code>
+        <location>/WEB-INF/exceptionPages/tooManyRequestException.jsp</location>
     </error-page>
 
     <error-page>
         <exception-type>com.es.phoneshop.exception.ProductNotFoundException</exception-type>
-        <location>/WEB-INF/pages/exceptions/productNotFoundException.jsp</location>
+        <location>/WEB-INF/exceptionPages/productNotFoundException.jsp</location>
     </error-page>
 
     <error-page>
         <exception-type>com.es.phoneshop.exception.OrderNotFoundException</exception-type>
-        <location>/WEB-INF/pages/exceptions/orderNotFoundException.jsp</location>
+        <location>/WEB-INF/exceptionPages/orderNotFoundException.jsp</location>
     </error-page>
 </web-app>

@@ -1,4 +1,4 @@
-package com.es.phoneshop.service;
+package com.es.phoneshop.service.product;
 
 import com.es.phoneshop.configuration.ProductComparatorsConfiguration;
 import com.es.phoneshop.dao.product.ProductDao;
@@ -6,7 +6,6 @@ import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.sorting.SortField;
 import com.es.phoneshop.model.product.sorting.SortOrder;
-import com.es.phoneshop.service.product.CustomProductService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

@@ -17,8 +17,8 @@ public class CustomOrderService implements OrderService {
 
     private static volatile CustomOrderService instance;
     private static final BigDecimal DEFAULT_DELIVERY_COST = BigDecimal.TEN;
-    private final OrderDao orderDao;
-    private final CartService cartService;
+    private OrderDao orderDao;
+    private CartService cartService;
 
     private CustomOrderService() {
         orderDao = CustomOrderDao.getInstance();

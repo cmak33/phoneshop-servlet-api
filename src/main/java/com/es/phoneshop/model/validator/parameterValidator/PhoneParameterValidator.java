@@ -28,7 +28,7 @@ public class PhoneParameterValidator implements ParameterValidator {
 
     @Override
     public boolean validate(String value, Map<String, String> errors, String parameterName) {
-        String PHONE_PATTERN = "[+]?\\d+";
+        String PHONE_PATTERN = "[+]?[\\d\\s]+";
         if (value.matches(PHONE_PATTERN)) {
             try {
                 Phonenumber.PhoneNumber number = phoneNumberUtil.parse(value, null);

@@ -1,11 +1,14 @@
 package com.es.phoneshop.service.security;
 
+import lombok.Getter;
+
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Getter
 public class CustomDosProtectionService implements DosProtectionService {
 
     private static volatile CustomDosProtectionService instance;

@@ -15,7 +15,6 @@ import java.io.IOException;
 
 public class DosProtectionFilter implements Filter {
 
-    private final int TOO_MANY_REQUESTS_STATUS = 429;
     private DosProtectionService dosProtectionService;
 
     @Override
@@ -30,7 +29,8 @@ public class DosProtectionFilter implements Filter {
         if (dosProtectionService.isUserAllowed(ip)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            ((HttpServletResponse) servletResponse).setStatus(TOO_MANY_REQUESTS_STATUS);
+            int TOO_MANY_REQUESTS_STATUS = 429;
+            ((HttpServletResponse) servletResponse).sendError(TOO_MANY_REQUESTS_STATUS);
         }
     }
 }
