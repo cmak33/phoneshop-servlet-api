@@ -26,4 +26,8 @@ public enum PaymentMethod {
     public static List<String> getMethodNames() {
         return Arrays.stream(PaymentMethod.values()).map(x -> x.methodName).toList();
     }
+
+    public String getMethodName() {
+        return methodName;
+    }
 }

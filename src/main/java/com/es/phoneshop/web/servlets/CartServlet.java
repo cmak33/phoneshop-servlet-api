@@ -35,7 +35,7 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         AttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
-        request.setAttribute("products", cartService.getCartProducts(attributesHolder));
+        request.setAttribute("products", cartService.getCartProductsFromAttributesHolder(attributesHolder));
         request.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(request, response);
     }
 

@@ -55,7 +55,7 @@ public class CheckoutPageServlet extends HttpServlet {
                 Order order = orderService.createOrder(cart);
                 request.setAttribute("order", order);
             }
-            request.setAttribute("products", cartService.getCartProducts(attributesHolder));
+            request.setAttribute("products", cartService.getCartProductsFromAttributesHolder(attributesHolder));
             request.setAttribute("paymentMethods", PaymentMethod.getMethodNames());
             request.setAttribute("isEmpty", false);
         } else {
@@ -66,15 +66,18 @@ public class CheckoutPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Cart cart = cartService.getCart(new HttpSessionAttributesHolder(request.getSession()));
+        AttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
+        Cart cart = cartService.getCart(attributesHolder);
         Order order = orderService.createOrder(cart);
         Map<String, String> errors = new HashMap<>();
         setContactDetails(request, errors, order);
         setDeliveryDetails(request, errors, order);
         setPaymentMethod(errors, request, "paymentMethod", order);
         if (errors.isEmpty()) {
+            cartService.clearCart(attributesHolder);
             orderService.placeOrder(order);
-            response.sendRedirect(String.format("%s/cart", request.getContextPath()));
+            String url = String.format("%s/order/overview/%s", request.getContextPath(), order.getSecureId());
+            response.sendRedirect(url);
         } else {
             request.setAttribute("order", order);
             request.setAttribute("errors", errors);

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Function;
 
 @Getter(AccessLevel.PROTECTED)
 @Setter
@@ -27,19 +28,23 @@ public class GenericDao<T extends Entity> implements Dao<T> {
         writeLock = readWriteLock.writeLock();
     }
 
-    @Override
-    public Optional<T> getEntity(Long id) {
-        if (id != null) {
+    protected <A> Optional<T> getEntityByField(A fieldValue, Function<T, A> valueGetter) {
+        if (fieldValue != null) {
             readLock.lock();
             try {
                 return entityList.stream()
-                        .filter(entity -> id.equals(entity.getId()))
+                        .filter(entity -> fieldValue.equals(valueGetter.apply(entity)))
                         .findAny();
             } finally {
                 readLock.unlock();
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<T> getEntity(Long id) {
+        return getEntityByField(id, Entity::getId);
     }
 
     @Override

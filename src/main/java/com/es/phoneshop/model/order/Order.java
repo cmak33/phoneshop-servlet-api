@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 public class Order extends Cart implements Entity {
 
     private Long id;
-    private String stringId;
+    private String secureId;
 
     private BigDecimal subtotal;
     private BigDecimal deliveryCost;
@@ -29,6 +29,9 @@ public class Order extends Cart implements Entity {
 
     public Order() {
         id = UUIDGenerator.getInstance().generateId();
-        stringId = UUIDGenerator.getInstance().generateStringId();
+    }
+
+    public void generateSecureId() {
+        secureId = UUIDGenerator.getInstance().generateStringId();
     }
 }

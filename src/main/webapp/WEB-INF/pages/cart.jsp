@@ -74,5 +74,6 @@
     </form>
     <form method="post" id="deleteItem">
     </form>
+    <p><a href="${contextPath}/checkout">Checkout page</a></p>
     <a href="${contextPath}/products">Back to product list</a>
 </tags:master>
