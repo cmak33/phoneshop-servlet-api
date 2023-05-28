@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.validator.validator;
+package com.es.phoneshop.validator.validator;
 
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;

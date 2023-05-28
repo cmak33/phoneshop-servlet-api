@@ -1,21 +1,21 @@
-package com.es.phoneshop.model.validator.parameterValidator;
+package com.es.phoneshop.validator.parameterValidator;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
-public class NotBlankParameterValidator implements ParameterValidator {
+public class DefaultParameterValidator implements ParameterValidator {
 
-    private static volatile NotBlankParameterValidator instance;
+    private static volatile DefaultParameterValidator instance;
 
-    private NotBlankParameterValidator() {
+    private DefaultParameterValidator() {
     }
 
-    public static NotBlankParameterValidator getInstance() {
+    public static DefaultParameterValidator getInstance() {
         if (instance == null) {
-            synchronized (NotBlankParameterValidator.class) {
+            synchronized (DefaultParameterValidator.class) {
                 if (instance == null) {
-                    instance = new NotBlankParameterValidator();
+                    instance = new DefaultParameterValidator();
                 }
             }
         }

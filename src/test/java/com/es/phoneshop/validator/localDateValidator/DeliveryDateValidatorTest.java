@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.validator.localDateValidator;
+package com.es.phoneshop.validator.localDateValidator;
 
 import org.junit.Before;
 import org.junit.Test;

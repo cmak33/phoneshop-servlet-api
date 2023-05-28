@@ -3,8 +3,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-<jsp:useBean id="isEmpty" type="java.lang.Boolean" scope="request"/>
-
 <tags:master pageTitle="Checkout page">
     <c:set var="contextPath" value="${pageContext.servletContext.contextPath}"/>
     <c:if test="${not empty errors}">

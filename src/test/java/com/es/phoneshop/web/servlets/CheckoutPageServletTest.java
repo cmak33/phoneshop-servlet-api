@@ -2,12 +2,12 @@ package com.es.phoneshop.web.servlets;
 
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
-import com.es.phoneshop.model.cart.ProductAndQuantity;
+import com.es.phoneshop.model.cart.CartProduct;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.paymentMethod.PaymentMethod;
-import com.es.phoneshop.model.validator.localDateValidator.LocalDateValidator;
-import com.es.phoneshop.model.validator.parameterValidator.NotBlankParameterValidator;
-import com.es.phoneshop.model.validator.parameterValidator.PhoneParameterValidator;
+import com.es.phoneshop.validator.localDateValidator.LocalDateValidator;
+import com.es.phoneshop.validator.parameterValidator.DefaultParameterValidator;
+import com.es.phoneshop.validator.parameterValidator.PhoneParameterValidator;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.order.OrderService;
 import jakarta.servlet.RequestDispatcher;
@@ -52,7 +52,7 @@ public class CheckoutPageServletTest {
     @Mock
     private PhoneParameterValidator phoneParameterValidator;
     @Mock
-    private NotBlankParameterValidator notBlankParameterValidator;
+    private DefaultParameterValidator defaultParameterValidator;
     @Mock
     private LocalDateValidator localDateValidator;
     @Mock
@@ -72,7 +72,7 @@ public class CheckoutPageServletTest {
 
     @Test
     public void givenNotEmptyCart_whenDoGet_thenForward() throws ServletException, IOException {
-        List<ProductAndQuantity> productList = new ArrayList<>();
+        List<CartProduct> productList = new ArrayList<>();
         when(cartService.getCart(any())).thenReturn(cart);
         when(cart.getCartItems()).thenReturn(new ArrayList<>() {{
             add(new CartItem(1L, 1));
@@ -102,7 +102,7 @@ public class CheckoutPageServletTest {
     public void givenValidOrderParameters_whenDoPost_thenPlaceOrder() throws ServletException, IOException {
         when(cartService.getCart(any())).thenReturn(cart);
         when(orderService.createOrder(cart)).thenReturn(order);
-        when(notBlankParameterValidator.validate(any(), any(), any())).thenReturn(true);
+        when(defaultParameterValidator.validate(any(), any(), any())).thenReturn(true);
         when(phoneParameterValidator.validate(any(), any(), any())).thenReturn(true);
         when(localDateValidator.validate(any(), any(), anyString())).thenReturn(true);
         when(request.getParameter("deliveryDate")).thenReturn(LocalDate.now().toString());
@@ -119,7 +119,7 @@ public class CheckoutPageServletTest {
         LocalDate date = LocalDate.now();
         when(cartService.getCart(any())).thenReturn(cart);
         when(orderService.createOrder(cart)).thenReturn(order);
-        when(notBlankParameterValidator.validate(any(), any(), any())).thenReturn(true);
+        when(defaultParameterValidator.validate(any(), any(), any())).thenReturn(true);
         when(phoneParameterValidator.validate(any(), any(), any())).thenReturn(true);
         doAnswer(mock -> {
             Map<String, String> errors = mock.getArgument(1);

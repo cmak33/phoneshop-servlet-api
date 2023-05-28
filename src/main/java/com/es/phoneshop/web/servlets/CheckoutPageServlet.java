@@ -7,10 +7,10 @@ import com.es.phoneshop.model.contactDetails.ContactDetails;
 import com.es.phoneshop.model.deliveryDetails.DeliveryDetails;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.paymentMethod.PaymentMethod;
-import com.es.phoneshop.model.validator.localDateValidator.DeliveryDateValidator;
-import com.es.phoneshop.model.validator.localDateValidator.LocalDateValidator;
-import com.es.phoneshop.model.validator.parameterValidator.NotBlankParameterValidator;
-import com.es.phoneshop.model.validator.parameterValidator.PhoneParameterValidator;
+import com.es.phoneshop.validator.localDateValidator.DeliveryDateValidator;
+import com.es.phoneshop.validator.localDateValidator.LocalDateValidator;
+import com.es.phoneshop.validator.parameterValidator.DefaultParameterValidator;
+import com.es.phoneshop.validator.parameterValidator.PhoneParameterValidator;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.CustomCartService;
 import com.es.phoneshop.service.order.CustomOrderService;
@@ -33,7 +33,7 @@ public class CheckoutPageServlet extends HttpServlet {
     private CartService cartService;
     private OrderService orderService;
     private PhoneParameterValidator phoneParameterValidator;
-    private NotBlankParameterValidator notBlankParameterValidator;
+    private DefaultParameterValidator defaultParameterValidator;
     private LocalDateValidator localDateValidator;
 
     @Override
@@ -42,7 +42,7 @@ public class CheckoutPageServlet extends HttpServlet {
         cartService = CustomCartService.getInstance();
         orderService = CustomOrderService.getInstance();
         phoneParameterValidator = PhoneParameterValidator.getInstance();
-        notBlankParameterValidator = NotBlankParameterValidator.getInstance();
+        defaultParameterValidator = DefaultParameterValidator.getInstance();
         localDateValidator = DeliveryDateValidator.getInstance();
     }
 
@@ -55,7 +55,7 @@ public class CheckoutPageServlet extends HttpServlet {
                 Order order = orderService.createOrder(cart);
                 request.setAttribute("order", order);
             }
-            request.setAttribute("products", cartService.getCartProductsFromAttributesHolder(attributesHolder));
+            request.setAttribute("products", cartService.getCartProducts(attributesHolder));
             request.setAttribute("paymentMethods", PaymentMethod.getMethodNames());
             request.setAttribute("isEmpty", false);
         } else {
@@ -129,7 +129,7 @@ public class CheckoutPageServlet extends HttpServlet {
     }
 
     private void setNotBlankParameter(Map<String, String> errors, HttpServletRequest request, String parameterName, Consumer<String> consumer) {
-        if (notBlankParameterValidator.validate(request.getParameter(parameterName), errors, parameterName)) {
+        if (defaultParameterValidator.validate(request.getParameter(parameterName), errors, parameterName)) {
             consumer.accept(request.getParameter(parameterName));
         }
     }

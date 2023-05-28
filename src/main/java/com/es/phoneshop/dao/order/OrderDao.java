@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface OrderDao extends Dao<Order> {
 
     Optional<Order> getOrderBySecureId(String secureId);
+
+    void placeOrder(Order order);
 }

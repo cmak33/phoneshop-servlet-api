@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.validator.parameterValidator;
+package com.es.phoneshop.validator.parameterValidator;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -28,8 +28,8 @@ public class PhoneParameterValidator implements ParameterValidator {
 
     @Override
     public boolean validate(String value, Map<String, String> errors, String parameterName) {
-        String PHONE_PATTERN = "[+]?[\\d\\s]+";
-        if (value.matches(PHONE_PATTERN)) {
+        String phonePattern = "[+]?[\\d\\s]+";
+        if (value.matches(phonePattern)) {
             try {
                 Phonenumber.PhoneNumber number = phoneNumberUtil.parse(value, null);
                 if (phoneNumberUtil.isValidNumber(number)) {

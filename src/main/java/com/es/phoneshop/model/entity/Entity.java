@@ -1,6 +1,8 @@
 package com.es.phoneshop.model.entity;
 
-public interface Entity {
+import java.io.Serializable;
+
+public interface Entity extends Serializable {
 
     Long getId();
 }

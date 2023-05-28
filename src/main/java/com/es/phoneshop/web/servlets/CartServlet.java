@@ -5,7 +5,7 @@ import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.attributesHolder.HttpSessionAttributesHolder;
 import com.es.phoneshop.model.parser.QuantityParser;
-import com.es.phoneshop.model.validator.validator.QuantityValidator;
+import com.es.phoneshop.validator.validator.QuantityValidator;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.CustomCartService;
 import jakarta.servlet.ServletConfig;
@@ -35,7 +35,7 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         AttributesHolder attributesHolder = new HttpSessionAttributesHolder(request.getSession());
-        request.setAttribute("products", cartService.getCartProductsFromAttributesHolder(attributesHolder));
+        request.setAttribute("products", cartService.getCartProducts(attributesHolder));
         request.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(request, response);
     }
 

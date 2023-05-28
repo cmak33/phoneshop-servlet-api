@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.validator.parameterValidator;
+package com.es.phoneshop.validator.parameterValidator;
 
 import java.util.Map;
 

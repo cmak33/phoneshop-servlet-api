@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.validator.parameterValidator;
+package com.es.phoneshop.validator.parameterValidator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,9 +10,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class NotBlankParameterValidatorTest {
+public class DefaultParameterValidatorTest {
 
-    private final NotBlankParameterValidator validator = NotBlankParameterValidator.getInstance();
+    private final DefaultParameterValidator validator = DefaultParameterValidator.getInstance();
     private Map<String, String> errors;
 
     @Before

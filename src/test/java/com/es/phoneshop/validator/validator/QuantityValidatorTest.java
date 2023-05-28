@@ -1,5 +1,6 @@
-package com.es.phoneshop.model.validator.validator;
+package com.es.phoneshop.validator.validator;
 
+import com.es.phoneshop.validator.validator.QuantityValidator;
 import org.junit.Before;
 import org.junit.Test;
 

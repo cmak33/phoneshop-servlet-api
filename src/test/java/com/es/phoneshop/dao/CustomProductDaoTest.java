@@ -52,17 +52,17 @@ public class CustomProductDaoTest {
     }
 
     @Test
-    public void givenIdOfNotExistingProduct_whenGetProduct_thenReturnEmptyOptional() {
+    public void givenIdOfNotExistingProduct_whenGetEntity_thenReturnEmptyOptional() {
         assertTrue(productDao.getEntity(-1L).isEmpty());
     }
 
     @Test
-    public void givenNullId_whenGetProduct_thenReturnEmptyOptional() {
+    public void givenNullId_whenGetEntity_thenReturnEmptyOptional() {
         assertTrue(productDao.getEntity(null).isEmpty());
     }
 
     @Test
-    public void givenExistingProduct_whenGetProduct_thenReturnProduct() {
+    public void givenExistingProduct_whenGetEntity_thenReturnProduct() {
         Product product = productDao.getEntityList().get(0);
 
         Optional<Product> actualProduct = productDao.getEntity(product.getId());

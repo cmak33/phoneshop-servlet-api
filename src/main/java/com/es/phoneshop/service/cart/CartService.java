@@ -4,7 +4,7 @@ import com.es.phoneshop.exception.OutOfStockException;
 import com.es.phoneshop.exception.ProductNotInCartException;
 import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.cart.Cart;
-import com.es.phoneshop.model.cart.ProductAndQuantity;
+import com.es.phoneshop.model.cart.CartProduct;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ public interface CartService {
 
     Cart getCart(AttributesHolder attributesHolder);
 
-    List<ProductAndQuantity> getCartProductsFromAttributesHolder(AttributesHolder attributesHolder);
+    List<CartProduct> getCartProducts(AttributesHolder attributesHolder);
 
-    List<ProductAndQuantity> getCartProducts(Cart cart);
+    List<CartProduct> getCartProducts(Cart cart);
 
     void updateCartItem(AttributesHolder attributesHolder, Long id, int newQuantity) throws OutOfStockException, ProductNotInCartException;
 

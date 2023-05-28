@@ -5,7 +5,7 @@ import com.es.phoneshop.exception.ProductNotInCartException;
 import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
-import com.es.phoneshop.model.cart.ProductAndQuantity;
+import com.es.phoneshop.model.cart.CartProduct;
 import com.es.phoneshop.service.product.CustomProductService;
 import com.es.phoneshop.service.product.ProductService;
 import com.es.phoneshop.utility.SessionAttributeNames;
@@ -40,15 +40,15 @@ public class CustomCartService implements CartService {
     }
 
     @Override
-    public List<ProductAndQuantity> getCartProductsFromAttributesHolder(AttributesHolder attributesHolder) {
+    public List<CartProduct> getCartProducts(AttributesHolder attributesHolder) {
         return getCartProducts(getCart(attributesHolder));
     }
 
     @Override
-    public List<ProductAndQuantity> getCartProducts(Cart cart) {
+    public List<CartProduct> getCartProducts(Cart cart) {
         return cart.getCartItems()
                 .stream()
-                .map(item -> new ProductAndQuantity(productService.getProduct(item.getProductId()), item.getQuantity()))
+                .map(item -> new CartProduct(productService.getProduct(item.getProductId()), item.getQuantity()))
                 .toList();
     }
 

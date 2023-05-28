@@ -28,4 +28,10 @@ public class CustomOrderDao extends GenericDao<Order> implements OrderDao {
     public Optional<Order> getOrderBySecureId(String secureId) {
         return getEntityByField(secureId, Order::getSecureId);
     }
+
+    @Override
+    public void placeOrder(Order order) {
+        order.generateSecureId();
+        save(order);
+    }
 }

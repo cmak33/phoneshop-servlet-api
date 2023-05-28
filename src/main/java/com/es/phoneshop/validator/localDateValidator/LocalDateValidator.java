@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.validator.localDateValidator;
+package com.es.phoneshop.validator.localDateValidator;
 
 import java.time.LocalDate;
 import java.util.Map;

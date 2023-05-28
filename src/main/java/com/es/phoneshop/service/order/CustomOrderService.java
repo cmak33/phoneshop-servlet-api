@@ -5,7 +5,7 @@ import com.es.phoneshop.dao.order.OrderDao;
 import com.es.phoneshop.exception.OrderNotFoundException;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
-import com.es.phoneshop.model.cart.ProductAndQuantity;
+import com.es.phoneshop.model.cart.CartProduct;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.CustomCartService;
@@ -54,13 +54,12 @@ public class CustomOrderService implements OrderService {
     }
 
     @Override
-    public List<ProductAndQuantity> getOrderProducts(Order order) {
+    public List<CartProduct> getOrderProducts(Order order) {
         return cartService.getCartProducts(order);
     }
 
     @Override
     public void placeOrder(Order order) {
-        order.generateSecureId();
-        orderDao.save(order);
+        orderDao.placeOrder(order);
     }
 }

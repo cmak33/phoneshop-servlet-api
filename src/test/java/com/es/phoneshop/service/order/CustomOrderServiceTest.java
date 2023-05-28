@@ -4,7 +4,7 @@ import com.es.phoneshop.dao.order.OrderDao;
 import com.es.phoneshop.exception.OrderNotFoundException;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
-import com.es.phoneshop.model.cart.ProductAndQuantity;
+import com.es.phoneshop.model.cart.CartProduct;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.cart.CartService;
@@ -76,11 +76,11 @@ public class CustomOrderServiceTest {
 
     @Test
     public void givenOrder_whenGetOrderProducts_thenReturnProducts() {
-        List<ProductAndQuantity> productList = new ArrayList<>();
-        productList.add(new ProductAndQuantity(new Product(), 100));
+        List<CartProduct> productList = new ArrayList<>();
+        productList.add(new CartProduct(new Product(), 100));
         when(cartService.getCartProducts(order)).thenReturn(productList);
 
-        List<ProductAndQuantity> actual = customOrderService.getOrderProducts(order);
+        List<CartProduct> actual = customOrderService.getOrderProducts(order);
 
         assertEquals(productList, actual);
     }
@@ -89,7 +89,6 @@ public class CustomOrderServiceTest {
     public void givenOrder_whenPlaceOrder_thenSaveOrder() {
         customOrderService.placeOrder(order);
 
-        verify(order).generateSecureId();
-        verify(orderDao).save(order);
+        verify(orderDao).placeOrder(order);
     }
 }
