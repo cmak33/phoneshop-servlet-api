@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 @Getter(AccessLevel.PROTECTED)
 @Setter
-public class GenericDao<T extends Entity> implements Dao<T> {
+public class GenericDao<A, T extends Entity<A>> implements Dao<A, T> {
 
     private final Lock readLock;
     private final Lock writeLock;
@@ -28,7 +28,7 @@ public class GenericDao<T extends Entity> implements Dao<T> {
         writeLock = readWriteLock.writeLock();
     }
 
-    protected <A> Optional<T> getEntityByField(A fieldValue, Function<T, A> valueGetter) {
+    protected <B> Optional<T> getEntityByField(B fieldValue, Function<T, B> valueGetter) {
         if (fieldValue != null) {
             readLock.lock();
             try {
@@ -43,7 +43,7 @@ public class GenericDao<T extends Entity> implements Dao<T> {
     }
 
     @Override
-    public Optional<T> getEntity(Long id) {
+    public Optional<T> getEntity(A id) {
         return getEntityByField(id, Entity::getId);
     }
 

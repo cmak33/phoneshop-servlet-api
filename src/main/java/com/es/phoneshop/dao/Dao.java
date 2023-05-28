@@ -4,9 +4,9 @@ import com.es.phoneshop.model.entity.Entity;
 
 import java.util.Optional;
 
-public interface Dao<T extends Entity> {
+public interface Dao<A, T extends Entity<A>> {
 
-    Optional<T> getEntity(Long id);
+    Optional<T> getEntity(A id);
 
     void save(T entity);
 }

@@ -6,7 +6,7 @@ import com.es.phoneshop.model.product.Product;
 import java.util.Comparator;
 import java.util.List;
 
-public interface ProductDao extends Dao<Product> {
+public interface ProductDao extends Dao<Long, Product> {
 
     List<Product> findProducts();
 

@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class CustomProductDao extends GenericDao<Product> implements ProductDao {
+public class CustomProductDao extends GenericDao<Long, Product> implements ProductDao {
 
     private static volatile CustomProductDao instance;
 

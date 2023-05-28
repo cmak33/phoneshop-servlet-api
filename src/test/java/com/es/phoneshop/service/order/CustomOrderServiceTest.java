@@ -59,7 +59,7 @@ public class CustomOrderServiceTest {
     @Test
     public void givenValidSecureId_whenGetOrderBySecureId_thenReturnOrder() {
         String secureId = "secure id";
-        when(orderDao.getOrderBySecureId(secureId)).thenReturn(Optional.of(order));
+        when(orderDao.getEntity(secureId)).thenReturn(Optional.of(order));
 
         Order actual = customOrderService.getOrderBySecureId(secureId);
 
@@ -69,7 +69,7 @@ public class CustomOrderServiceTest {
     @Test(expected = OrderNotFoundException.class)
     public void givenInvalidSecureId_whenGetOrderBySecureId_thenThrowOrderNotFoundException() {
         String invalidSecureId = "invalid id";
-        when(orderDao.getOrderBySecureId(invalidSecureId)).thenReturn(Optional.empty());
+        when(orderDao.getEntity(invalidSecureId)).thenReturn(Optional.empty());
 
         customOrderService.getOrderBySecureId(invalidSecureId);
     }

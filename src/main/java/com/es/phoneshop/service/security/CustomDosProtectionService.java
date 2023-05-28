@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class CustomDosProtectionService implements DosProtectionService {
 
     private static volatile CustomDosProtectionService instance;
-    private final long MAX_REQUESTS_PER_MINUTE = 20;
+    private final long MAX_REQUESTS_PER_MINUTE = 30;
     private final long REQUESTS_CLEAR_PERIOD = 60 * 1000;
     private final Map<String, AtomicLong> requestsCount;
 

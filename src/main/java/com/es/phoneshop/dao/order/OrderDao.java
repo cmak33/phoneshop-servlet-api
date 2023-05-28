@@ -3,11 +3,7 @@ package com.es.phoneshop.dao.order;
 import com.es.phoneshop.dao.Dao;
 import com.es.phoneshop.model.order.Order;
 
-import java.util.Optional;
-
-public interface OrderDao extends Dao<Order> {
-
-    Optional<Order> getOrderBySecureId(String secureId);
+public interface OrderDao extends Dao<String, Order> {
 
     void placeOrder(Order order);
 }

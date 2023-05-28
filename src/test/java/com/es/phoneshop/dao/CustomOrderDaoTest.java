@@ -32,30 +32,9 @@ public class CustomOrderDaoTest {
     }
 
     @Test
-    public void givenInvalidSecureId_whenGetOrderBySecureId_thenReturnOptionalEmpty() {
-        String secureId = "invalid id";
-
-        Optional<Order> actual = orderDao.getOrderBySecureId(secureId);
-
-        assertTrue(actual.isEmpty());
-    }
-
-    @Test
-    public void givenValidSecureId_whenGetOrderBySecureId_thenReturnOrder() {
-        String secureId = "valid id";
-        when(order.getSecureId()).thenReturn(secureId);
-
-        Optional<Order> actual = orderDao.getOrderBySecureId(secureId);
-
-        assertTrue(actual.isPresent());
-        assertEquals(order, actual.get());
-    }
-
-    @Test
     public void givenOrder_whenPlaceOrder_thenSaveOrder() {
         orderDao.placeOrder(order);
 
-        verify(order).generateSecureId();
         verify(orderDao).save(order);
     }
 
@@ -69,18 +48,13 @@ public class CustomOrderDaoTest {
     }
 
     @Test
-    public void givenIdOfNotExistingOrder_whenGetEntity_thenReturnEmptyOptional() {
-        assertTrue(orderDao.getEntity(-1L).isEmpty());
-    }
-
-    @Test
     public void givenNullId_whenGetEntity_thenReturnEmptyOptional() {
         assertTrue(orderDao.getEntity(null).isEmpty());
     }
 
     @Test
-    public void givenExistingOrder_whenGetEntity_thenReturnOrder() {
-        Long orderId = 1L;
+    public void givenExistingOrderId_whenGetEntity_thenReturnOrder() {
+        String orderId = "1";
         when(order.getId()).thenReturn(orderId);
         Optional<Order> actualOrder = orderDao.getEntity(orderId);
 

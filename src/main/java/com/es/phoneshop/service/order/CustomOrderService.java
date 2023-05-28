@@ -49,7 +49,7 @@ public class CustomOrderService implements OrderService {
 
     @Override
     public Order getOrderBySecureId(String id) {
-        return orderDao.getOrderBySecureId(id)
+        return orderDao.getEntity(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
     }
 

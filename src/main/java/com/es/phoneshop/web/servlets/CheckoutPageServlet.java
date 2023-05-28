@@ -76,7 +76,7 @@ public class CheckoutPageServlet extends HttpServlet {
         if (errors.isEmpty()) {
             cartService.clearCart(attributesHolder);
             orderService.placeOrder(order);
-            String url = String.format("%s/order/overview/%s", request.getContextPath(), order.getSecureId());
+            String url = String.format("%s/order/overview/%s", request.getContextPath(), order.getId());
             response.sendRedirect(url);
         } else {
             request.setAttribute("order", order);

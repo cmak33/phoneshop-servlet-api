@@ -29,16 +29,18 @@ public class PhoneParameterValidator implements ParameterValidator {
     @Override
     public boolean validate(String value, Map<String, String> errors, String parameterName) {
         String phonePattern = "[+]?[\\d\\s]+";
-        if (value.matches(phonePattern)) {
+        boolean isValid = value.matches(phonePattern);
+        if (isValid) {
             try {
                 Phonenumber.PhoneNumber number = phoneNumberUtil.parse(value, null);
-                if (phoneNumberUtil.isValidNumber(number)) {
-                    return true;
-                }
-            } catch (NumberParseException ignored) {
+                isValid = phoneNumberUtil.isValidNumber(number);
+            } catch (NumberParseException numberParseException) {
+                isValid = false;
             }
         }
-        errors.put(parameterName, "Value is not valid phone number");
-        return false;
+        if (!isValid) {
+            errors.put(parameterName, "Value is not valid phone number");
+        }
+        return isValid;
     }
 }
