@@ -1,4 +1,4 @@
-package com.es.phoneshop.exception;
+package com.es.phoneshop.exception.notFoundException;
 
 public class ProductNotFoundException extends EntityNotFoundException {
 

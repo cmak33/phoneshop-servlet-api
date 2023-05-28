@@ -149,12 +149,12 @@
     </error-page>
 
     <error-page>
-        <exception-type>com.es.phoneshop.exception.ProductNotFoundException</exception-type>
+        <exception-type>com.es.phoneshop.exception.notFoundException.ProductNotFoundException</exception-type>
         <location>/WEB-INF/exceptionPages/productNotFoundException.jsp</location>
     </error-page>
 
     <error-page>
-        <exception-type>com.es.phoneshop.exception.OrderNotFoundException</exception-type>
+        <exception-type>com.es.phoneshop.exception.notFoundException.OrderNotFoundException</exception-type>
         <location>/WEB-INF/exceptionPages/orderNotFoundException.jsp</location>
     </error-page>
 </web-app>

@@ -1,10 +1,5 @@
 package com.es.phoneshop.model.idGenerator;
 
-import com.es.phoneshop.configuration.ProductComparatorsConfiguration;
-import com.es.phoneshop.dao.product.CustomProductDao;
-import com.es.phoneshop.dao.product.ProductDao;
-import com.es.phoneshop.service.product.CustomProductService;
-
 import java.util.UUID;
 
 public class UUIDGenerator implements IdGenerator {
@@ -28,10 +23,5 @@ public class UUIDGenerator implements IdGenerator {
     @Override
     public Long generateId() {
         return UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
-    }
-
-    @Override
-    public String generateStringId() {
-        return UUID.randomUUID().toString();
     }
 }

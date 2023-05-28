@@ -54,9 +54,9 @@ public class CustomOrderDaoTest {
 
     @Test
     public void givenExistingOrderId_whenGetEntity_thenReturnOrder() {
-        String orderId = "1";
-        when(order.getId()).thenReturn(orderId);
-        Optional<Order> actualOrder = orderDao.getEntity(orderId);
+        Long id = 1L;
+        when(order.getId()).thenReturn(id);
+        Optional<Order> actualOrder = orderDao.getEntity(id);
 
         assertTrue(actualOrder.isPresent());
         assertEquals(order, actualOrder.get());

@@ -10,9 +10,9 @@ public interface OrderService {
 
     Order createOrder(Cart cart);
 
-    Order getOrderBySecureId(String id);
-
     List<CartProduct> getOrderProducts(Order order);
+
+    Order getOrder(Long id);
 
     void placeOrder(Order order);
 }

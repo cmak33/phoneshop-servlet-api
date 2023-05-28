@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 @Getter(AccessLevel.PROTECTED)
 @Setter
-public class GenericDao<A, T extends Entity<A>> implements Dao<A, T> {
+public abstract class GenericDao<A, T extends Entity<A>> implements Dao<A, T> {
 
     private final Lock readLock;
     private final Lock writeLock;

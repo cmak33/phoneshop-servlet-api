@@ -1,6 +1,6 @@
 package com.es.phoneshop.web.servlets;
 
-import com.es.phoneshop.exception.OrderNotFoundException;
+import com.es.phoneshop.exception.notFoundException.OrderNotFoundException;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.service.order.OrderService;
 import jakarta.servlet.RequestDispatcher;
@@ -49,20 +49,20 @@ public class OrderOverviewServletTest {
     }
 
     @Test(expected = OrderNotFoundException.class)
-    public void givenInvalidSecureId_whenDoGet_thenThrowOrderNotFoundException() throws ServletException, IOException {
-        String secureId = "secure id";
-        when(request.getPathInfo()).thenReturn(String.format("/%s", secureId));
-        when(orderService.getOrderBySecureId(secureId)).thenThrow(new OrderNotFoundException(secureId));
+    public void givenInvalidId_whenDoGet_thenThrowOrderNotFoundException() throws ServletException, IOException {
+        Long invalidId = -1L;
+        when(request.getPathInfo()).thenReturn(String.format("/%d", invalidId));
+        when(orderService.getOrder(invalidId)).thenThrow(new OrderNotFoundException(invalidId));
 
         orderOverviewPageServlet.doGet(request, response);
     }
 
     @Test
-    public void givenValidSecureId_whenDoGet_thenForward() throws ServletException, IOException {
+    public void givenValidId_whenDoGet_thenForward() throws ServletException, IOException {
         Order order = new Order();
-        String secureId = "secure id";
-        when(request.getPathInfo()).thenReturn(String.format("/%s", secureId));
-        when(orderService.getOrderBySecureId(secureId)).thenReturn(order);
+        Long id = 1L;
+        when(request.getPathInfo()).thenReturn(String.format("/%d", id));
+        when(orderService.getOrder(id)).thenReturn(order);
 
         orderOverviewPageServlet.doGet(request, response);
 

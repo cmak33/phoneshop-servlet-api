@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Product implements Entity<Long> {
+public class Product implements Entity<Long>, Serializable {
 
     private Long id;
     private String code;

@@ -1,7 +1,7 @@
 package com.es.phoneshop.dao.product;
 
 import com.es.phoneshop.dao.genericDao.GenericDao;
-import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.exception.notFoundException.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDescriptionMatch;
 

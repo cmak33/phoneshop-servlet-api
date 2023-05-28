@@ -3,7 +3,7 @@ package com.es.phoneshop.service.product;
 import com.es.phoneshop.configuration.ProductComparatorsConfiguration;
 import com.es.phoneshop.dao.product.CustomProductDao;
 import com.es.phoneshop.dao.product.ProductDao;
-import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.exception.notFoundException.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.sorting.SortField;
 import com.es.phoneshop.model.product.sorting.SortOrder;

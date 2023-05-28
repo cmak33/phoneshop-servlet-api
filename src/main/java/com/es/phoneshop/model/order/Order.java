@@ -13,9 +13,9 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class Order extends Cart implements Entity<String> {
+public class Order extends Cart implements Entity<Long> {
 
-    private String id;
+    private Long id;
 
     private BigDecimal subtotal;
     private BigDecimal deliveryCost;
@@ -27,6 +27,6 @@ public class Order extends Cart implements Entity<String> {
     private PaymentMethod paymentMethod;
 
     public Order() {
-        id = UUIDGenerator.getInstance().generateStringId();
+        id = UUIDGenerator.getInstance().generateId();
     }
 }

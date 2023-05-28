@@ -1,7 +1,7 @@
 package com.es.phoneshop.service.order;
 
 import com.es.phoneshop.dao.order.OrderDao;
-import com.es.phoneshop.exception.OrderNotFoundException;
+import com.es.phoneshop.exception.notFoundException.OrderNotFoundException;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.cart.CartProduct;
@@ -57,21 +57,21 @@ public class CustomOrderServiceTest {
     }
 
     @Test
-    public void givenValidSecureId_whenGetOrderBySecureId_thenReturnOrder() {
-        String secureId = "secure id";
-        when(orderDao.getEntity(secureId)).thenReturn(Optional.of(order));
+    public void givenValidId_whenGetOrder_thenReturnOrder() {
+        Long id = 1L;
+        when(orderDao.getEntity(id)).thenReturn(Optional.of(order));
 
-        Order actual = customOrderService.getOrderBySecureId(secureId);
+        Order actual = customOrderService.getOrder(id);
 
         assertEquals(order, actual);
     }
 
     @Test(expected = OrderNotFoundException.class)
-    public void givenInvalidSecureId_whenGetOrderBySecureId_thenThrowOrderNotFoundException() {
-        String invalidSecureId = "invalid id";
-        when(orderDao.getEntity(invalidSecureId)).thenReturn(Optional.empty());
+    public void givenInvalidId_whenGetOrder_thenThrowOrderNotFoundException() {
+        Long id = -1L;
+        when(orderDao.getEntity(id)).thenReturn(Optional.empty());
 
-        customOrderService.getOrderBySecureId(invalidSecureId);
+        customOrderService.getOrder(id);
     }
 
     @Test

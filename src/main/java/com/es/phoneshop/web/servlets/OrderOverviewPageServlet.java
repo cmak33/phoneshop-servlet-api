@@ -24,8 +24,8 @@ public class OrderOverviewPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getPathInfo() != null && request.getPathInfo().length() > 1) {
-            String secureId = request.getPathInfo().substring(1);
-            Order order = orderService.getOrderBySecureId(secureId);
+            Long id = Long.parseLong(request.getPathInfo().substring(1));
+            Order order = orderService.getOrder(id);
             request.setAttribute("order", order);
             request.setAttribute("products", orderService.getOrderProducts(order));
             request.getRequestDispatcher("/WEB-INF/pages/orderOverview.jsp").forward(request, response);
