@@ -8,6 +8,7 @@ import com.es.phoneshop.model.cart.CartProduct;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.cart.CartService;
+import com.es.phoneshop.service.product.ProductService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -29,6 +30,8 @@ public class CustomOrderServiceTest {
     private OrderDao orderDao;
     @Mock
     private CartService cartService;
+    @Mock
+    private ProductService productService;
     @Mock
     private Order order;
     @InjectMocks
@@ -89,6 +92,9 @@ public class CustomOrderServiceTest {
     public void givenOrder_whenPlaceOrder_thenSaveOrder() {
         customOrderService.placeOrder(order);
 
+        order.getCartItems()
+                .forEach(item -> verify(productService)
+                        .changeStock(item.getProductId(), -1 * item.getQuantity()));
         verify(orderDao).placeOrder(order);
     }
 }

@@ -16,6 +16,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CustomProductDaoTest {
@@ -216,5 +217,15 @@ public class CustomProductDaoTest {
         List<Product> actualProducts = productDao.findSortedProducts(comparator);
 
         assertEquals(expectedProducts, actualProducts);
+    }
+
+    @Test
+    public void givenNewStock_whenUpdateStock_thenSetNewStock() {
+        int newStock = 1000;
+        Product product = mockedProductsList.get(0);
+
+        productDao.updateStock(product, newStock);
+
+        verify(product).setStock(newStock);
     }
 }

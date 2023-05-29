@@ -83,6 +83,11 @@ public class CustomProductDao extends GenericDao<Long, Product> implements Produ
     }
 
     @Override
+    public void updateStock(Product product, int newStock) {
+        product.setStock(newStock);
+    }
+
+    @Override
     public void delete(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id was null");

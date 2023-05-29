@@ -16,5 +16,7 @@ public interface ProductDao extends Dao<Long, Product> {
 
     List<Product> findProductsByDescriptionWithOrdering(String description, Comparator<Product> comparator);
 
+    void updateStock(Product product, int newStock);
+
     void delete(Long id);
 }

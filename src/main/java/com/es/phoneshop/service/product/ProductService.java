@@ -18,6 +18,8 @@ public interface ProductService {
 
     List<Product> findProductsByDescriptionWithOrdering(String description, SortField sortField, SortOrder sortOrder);
 
+    void changeStock(Long id, int changeInStock);
+
     void save(Product product);
 
     void delete(Long id);

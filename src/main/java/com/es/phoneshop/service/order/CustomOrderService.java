@@ -9,6 +9,8 @@ import com.es.phoneshop.model.cart.CartProduct;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.cart.CustomCartService;
+import com.es.phoneshop.service.product.CustomProductService;
+import com.es.phoneshop.service.product.ProductService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,10 +21,12 @@ public class CustomOrderService implements OrderService {
     private static final BigDecimal DEFAULT_DELIVERY_COST = BigDecimal.TEN;
     private OrderDao orderDao;
     private CartService cartService;
+    private ProductService productService;
 
     private CustomOrderService() {
         orderDao = CustomOrderDao.getInstance();
         cartService = CustomCartService.getInstance();
+        productService = CustomProductService.getInstance();
     }
 
     public static CustomOrderService getInstance() {
@@ -60,6 +64,9 @@ public class CustomOrderService implements OrderService {
 
     @Override
     public void placeOrder(Order order) {
+        order.getCartItems()
+                .forEach(item -> productService
+                        .changeStock(item.getProductId(), -1 * item.getQuantity()));
         orderDao.placeOrder(order);
     }
 }
