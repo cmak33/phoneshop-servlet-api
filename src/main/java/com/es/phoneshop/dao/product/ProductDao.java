@@ -1,14 +1,12 @@
-package com.es.phoneshop.dao;
+package com.es.phoneshop.dao.product;
 
+import com.es.phoneshop.dao.Dao;
 import com.es.phoneshop.model.product.Product;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
-public interface ProductDao {
-
-    Optional<Product> getProduct(Long id);
+public interface ProductDao extends Dao<Long, Product> {
 
     List<Product> findProducts();
 
@@ -18,7 +16,7 @@ public interface ProductDao {
 
     List<Product> findProductsByDescriptionWithOrdering(String description, Comparator<Product> comparator);
 
-    void save(Product product);
+    void updateStock(Product product, int newStock);
 
     void delete(Long id);
 }

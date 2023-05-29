@@ -1,29 +1,20 @@
-package com.es.phoneshop.dao;
+package com.es.phoneshop.dao.product;
 
-import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.dao.genericDao.GenericDao;
+import com.es.phoneshop.exception.notFoundException.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDescriptionMatch;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class CustomProductDao implements ProductDao {
+public class CustomProductDao extends GenericDao<Long, Product> implements ProductDao {
 
     private static volatile CustomProductDao instance;
-    private final Lock readLock;
-    private final Lock writeLock;
-    private List<Product> productList;
 
     private CustomProductDao() {
-        productList = new ArrayList<>();
-        ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-        readLock = readWriteLock.readLock();
-        writeLock = readWriteLock.writeLock();
+        super();
     }
 
     public static CustomProductDao getInstance() {
@@ -38,29 +29,14 @@ public class CustomProductDao implements ProductDao {
     }
 
     @Override
-    public Optional<Product> getProduct(Long id) {
-        if (id != null) {
-            readLock.lock();
-            try {
-                return productList.stream()
-                        .filter(product -> id.equals(product.getId()))
-                        .findAny();
-            } finally {
-                readLock.unlock();
-            }
-        }
-        return Optional.empty();
-    }
-
-    @Override
     public List<Product> findProducts() {
-        readLock.lock();
+        getReadLock().lock();
         try {
-            return productList.stream()
+            return getEntityList().stream()
                     .filter(product -> product.getPrice() != null && product.getStock() > 0)
                     .toList();
         } finally {
-            readLock.unlock();
+            getReadLock().unlock();
         }
     }
 
@@ -73,7 +49,7 @@ public class CustomProductDao implements ProductDao {
 
     @Override
     public List<Product> findProductsByDescription(String description) {
-        readLock.lock();
+        getReadLock().lock();
         try {
             List<String> descriptionWords = Arrays.asList(description.toLowerCase().split(" "));
             Comparator<ProductDescriptionMatch> descriptionMatchComparator = Comparator.comparing(ProductDescriptionMatch::matchingWordsCount)
@@ -86,7 +62,7 @@ public class CustomProductDao implements ProductDao {
                     .map(ProductDescriptionMatch::product)
                     .toList();
         } finally {
-            readLock.unlock();
+            getReadLock().unlock();
         }
     }
 
@@ -107,22 +83,8 @@ public class CustomProductDao implements ProductDao {
     }
 
     @Override
-    public void save(Product product) {
-        if (product == null) {
-            throw new IllegalArgumentException("Product was null");
-        }
-        writeLock.lock();
-        try {
-            Optional<Product> productWithSameId = getProduct(product.getId());
-            if (productWithSameId.isPresent()) {
-                int productWithSameIdIndex = productList.indexOf(productWithSameId.get());
-                productList.set(productWithSameIdIndex, product);
-            } else {
-                productList.add(product);
-            }
-        } finally {
-            writeLock.unlock();
-        }
+    public void updateStock(Product product, int newStock) {
+        product.setStock(newStock);
     }
 
     @Override
@@ -130,21 +92,13 @@ public class CustomProductDao implements ProductDao {
         if (id == null) {
             throw new IllegalArgumentException("Id was null");
         }
-        writeLock.lock();
+        getWriteLock().lock();
         try {
-            if (!productList.removeIf(product -> id.equals(product.getId()))) {
+            if (!getEntityList().removeIf(product -> id.equals(product.getId()))) {
                 throw new ProductNotFoundException(id);
             }
         } finally {
-            writeLock.unlock();
+            getWriteLock().unlock();
         }
-    }
-
-    public List<Product> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
     }
 }

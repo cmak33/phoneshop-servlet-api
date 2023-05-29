@@ -1,9 +1,10 @@
 package com.es.phoneshop.service.product;
 
 import com.es.phoneshop.configuration.ProductComparatorsConfiguration;
-import com.es.phoneshop.dao.CustomProductDao;
-import com.es.phoneshop.dao.ProductDao;
-import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.dao.product.CustomProductDao;
+import com.es.phoneshop.dao.product.ProductDao;
+import com.es.phoneshop.exception.NegativeStockException;
+import com.es.phoneshop.exception.notFoundException.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.sorting.SortField;
 import com.es.phoneshop.model.product.sorting.SortOrder;
@@ -35,10 +36,9 @@ public class CustomProductService implements ProductService {
 
     @Override
     public Product getProduct(Long id) {
-        return productDao.getProduct(id)
+        return productDao.getEntity(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
-
 
     @Override
     public List<Product> findProducts() {
@@ -60,6 +60,18 @@ public class CustomProductService implements ProductService {
     public List<Product> findProductsByDescriptionWithOrdering(String description, SortField sortField, SortOrder sortOrder) {
         Comparator<Product> productComparator = productComparatorsConfiguration.getComparatorByFieldAndOrder(sortField, sortOrder);
         return productDao.findProductsByDescriptionWithOrdering(description, productComparator);
+    }
+
+    @Override
+    public void changeStock(Long id, int changeInStock) {
+        Product product = getProduct(id);
+        synchronized (product) {
+            int newStock = product.getStock() + changeInStock;
+            if (newStock < 0) {
+                throw new NegativeStockException();
+            }
+            productDao.updateStock(product, newStock);
+        }
     }
 
     @Override

@@ -41,10 +41,11 @@ public class CustomCartService implements CartService {
 
     @Override
     public List<CartProduct> getCartProducts(AttributesHolder attributesHolder) {
-        return getProductsFromCart(getCart(attributesHolder));
+        return getCartProducts(getCart(attributesHolder));
     }
 
-    private List<CartProduct> getProductsFromCart(Cart cart) {
+    @Override
+    public List<CartProduct> getCartProducts(Cart cart) {
         return cart.getCartItems()
                 .stream()
                 .map(item -> new CartProduct(productService.getProduct(item.getProductId()), item.getQuantity()))
@@ -100,6 +101,16 @@ public class CustomCartService implements CartService {
         }
     }
 
+    @Override
+    public void clearCart(AttributesHolder attributesHolder) {
+        Cart cart = getCart(attributesHolder);
+        synchronized (attributesHolder.getSynchronizationObject()) {
+            cart.getCartItems().clear();
+            cart.setTotalCost(BigDecimal.ZERO);
+            cart.setTotalQuantity(0);
+        }
+    }
+
     private Optional<CartItem> findCartItemById(Cart cart, Long productId) {
         return cart.getCartItems().stream()
                 .filter(item -> item.getProductId().equals(productId))
@@ -126,7 +137,7 @@ public class CustomCartService implements CartService {
     }
 
     private BigDecimal calculateTotalCost(Cart cart) {
-        return getProductsFromCart(cart).stream()
+        return getCartProducts(cart).stream()
                 .map(item -> item.product()
                         .getPrice()
                         .multiply(BigDecimal.valueOf(item.quantity())))

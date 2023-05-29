@@ -1,6 +1,6 @@
 package com.es.phoneshop.web.listeners;
 
-import com.es.phoneshop.dao.CustomProductDao;
+import com.es.phoneshop.dao.product.CustomProductDao;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import org.junit.Test;

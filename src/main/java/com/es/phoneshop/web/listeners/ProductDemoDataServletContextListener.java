@@ -1,7 +1,7 @@
 package com.es.phoneshop.web.listeners;
 
-import com.es.phoneshop.dao.CustomProductDao;
-import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.product.CustomProductDao;
+import com.es.phoneshop.dao.product.ProductDao;
 import com.es.phoneshop.model.product.PriceChange;
 import com.es.phoneshop.model.product.Product;
 import jakarta.servlet.ServletContextEvent;

@@ -1,6 +1,6 @@
 package com.es.phoneshop.web.servlets;
 
-import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.exception.notFoundException.ProductNotFoundException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.product.ProductService;
 import jakarta.servlet.RequestDispatcher;

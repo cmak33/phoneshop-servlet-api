@@ -1,13 +1,12 @@
-package com.es.phoneshop.service;
+package com.es.phoneshop.service.cart;
 
 import com.es.phoneshop.exception.OutOfStockException;
-import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.exception.notFoundException.ProductNotFoundException;
 import com.es.phoneshop.exception.ProductNotInCartException;
 import com.es.phoneshop.model.attributesHolder.AttributesHolder;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.service.cart.CustomCartService;
 import com.es.phoneshop.service.product.ProductService;
 import org.junit.Before;
 import org.junit.Test;

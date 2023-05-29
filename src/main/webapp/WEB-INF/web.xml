@@ -68,6 +68,21 @@
         <servlet-class>com.es.phoneshop.web.servlets.CartDeleteItemServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>checkoutPage</servlet-name>
+        <servlet-class>com.es.phoneshop.web.servlets.CheckoutPageServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>orderOverview</servlet-name>
+        <servlet-class>com.es.phoneshop.web.servlets.OrderOverviewPageServlet</servlet-class>
+    </servlet>
+
+    <filter>
+        <filter-name>dosProtectionFilter</filter-name>
+        <filter-class>com.es.phoneshop.web.filters.DosProtectionFilter</filter-class>
+    </filter>
+
     <servlet-mapping>
         <servlet-name>productList</servlet-name>
         <url-pattern>/products</url-pattern>
@@ -103,18 +118,43 @@
         <url-pattern>/cart/delete-item/*</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>checkoutPage</servlet-name>
+        <url-pattern>/checkout</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>orderOverview</servlet-name>
+        <url-pattern>/order/overview/*</url-pattern>
+    </servlet-mapping>
+
+    <filter-mapping>
+        <filter-name>dosProtectionFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <error-page>
         <error-code>500</error-code>
-        <location>/WEB-INF/pages/exceptions/internalServerException.jsp</location>
+        <location>/WEB-INF/exceptionPages/internalServerException.jsp</location>
     </error-page>
 
     <error-page>
         <error-code>404</error-code>
-        <location>/WEB-INF/pages/exceptions/notFoundException.jsp</location>
+        <location>/WEB-INF/exceptionPages/notFoundException.jsp</location>
     </error-page>
 
     <error-page>
-        <exception-type>com.es.phoneshop.exception.ProductNotFoundException</exception-type>
-        <location>/WEB-INF/pages/exceptions/productNotFoundException.jsp</location>
+        <error-code>429</error-code>
+        <location>/WEB-INF/exceptionPages/tooManyRequestException.jsp</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>com.es.phoneshop.exception.notFoundException.ProductNotFoundException</exception-type>
+        <location>/WEB-INF/exceptionPages/productNotFoundException.jsp</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>com.es.phoneshop.exception.notFoundException.OrderNotFoundException</exception-type>
+        <location>/WEB-INF/exceptionPages/orderNotFoundException.jsp</location>
     </error-page>
 </web-app>

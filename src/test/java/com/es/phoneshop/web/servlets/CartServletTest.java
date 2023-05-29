@@ -2,9 +2,8 @@ package com.es.phoneshop.web.servlets;
 
 import com.es.phoneshop.exception.CustomParseException;
 import com.es.phoneshop.exception.OutOfStockException;
-import com.es.phoneshop.model.cart.CartProduct;
 import com.es.phoneshop.model.parser.QuantityParser;
-import com.es.phoneshop.model.validator.QuantityValidator;
+import com.es.phoneshop.validator.validator.QuantityValidator;
 import com.es.phoneshop.service.cart.CartService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -18,9 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -59,10 +56,6 @@ public class CartServletTest {
 
     @Test
     public void givenValidRequest_whenDoGet_thenForward() throws ServletException, IOException {
-        List<CartProduct> cartProducts = new ArrayList<>() {
-        };
-        when(cartService.getCartProducts(any())).thenReturn(cartProducts);
-
         cartServlet.doGet(request, response);
 
         verify(requestDispatcher).forward(request, response);
