@@ -5,10 +5,13 @@ import com.es.phoneshop.model.product.Product;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public interface ProductDao extends Dao<Long, Product> {
 
     List<Product> findProducts();
+
+    List<Product> findProducts(Predicate<Product> predicate);
 
     List<Product> findSortedProducts(Comparator<Product> comparator);
 

@@ -78,6 +78,11 @@
         <servlet-class>com.es.phoneshop.web.servlets.OrderOverviewPageServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>advancedSearch</servlet-name>
+        <servlet-class>com.es.phoneshop.web.servlets.AdvancedSearchPageServlet</servlet-class>
+    </servlet>
+
     <filter>
         <filter-name>dosProtectionFilter</filter-name>
         <filter-class>com.es.phoneshop.web.filters.DosProtectionFilter</filter-class>
@@ -126,6 +131,11 @@
     <servlet-mapping>
         <servlet-name>orderOverview</servlet-name>
         <url-pattern>/order/overview/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>advancedSearch</servlet-name>
+        <url-pattern>/products/advanced-search</url-pattern>
     </servlet-mapping>
 
     <filter-mapping>

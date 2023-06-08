@@ -8,6 +8,7 @@ import com.es.phoneshop.model.product.ProductDescriptionMatch;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class CustomProductDao extends GenericDao<Long, Product> implements ProductDao {
 
@@ -38,6 +39,13 @@ public class CustomProductDao extends GenericDao<Long, Product> implements Produ
         } finally {
             getReadLock().unlock();
         }
+    }
+
+    @Override
+    public List<Product> findProducts(Predicate<Product> predicate) {
+        return findProducts().stream()
+                .filter(predicate)
+                .toList();
     }
 
     @Override

@@ -28,6 +28,7 @@
         <p style="color: green">${param.message}</p>
     </c:if>
     <a href="${contextPath}/cart">Cart</a>
+    <a href="${contextPath}/products/advanced-search">Advanced search</a>
     <form>
         <input type="text" name="query" value="${param.query}">
         <input type="submit" value="Search">
